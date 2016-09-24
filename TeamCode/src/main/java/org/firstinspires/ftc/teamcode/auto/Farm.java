@@ -1,8 +1,4 @@
-package com.qualcomm.ftcrobotcontroller.opmodes.auto;
-
-import org.ashebots.ftcandroidlib.complexOps.AutoRoutine;
-import org.ashebots.ftcandroidlib.complexOps.IMUChassis;
-import org.ashebots.ftcandroidlib.complexOps.Scaler;
+package org.firstinspires.ftc.teamcode.auto;
 
 /**
  * Created by apple on 9/15/16.

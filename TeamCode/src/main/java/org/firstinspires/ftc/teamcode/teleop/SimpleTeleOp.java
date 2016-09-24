@@ -1,11 +1,10 @@
-package com.qualcomm.ftcrobotcontroller.opmodes.teleop;
-
-import org.ashebots.ftcandroidlib.complexOps.*;
+package org.firstinspires.ftc.teamcode.teleop;
 
 public class SimpleTeleOp extends AdvOpMode{
     Chassis motors;
-    JoyEvent f = new JoyEvent(1.0,0.5,1.0,0.1);
-    JoyEvent s = new JoyEvent(0.5,0.3,1.0,0.1);
+    JoyEvent f = new JoyEvent(1.0,1.0,1.0,0.1);
+    JoyEvent n = new JoyEvent(0.75,0.85,1.0,0.1);
+    JoyEvent s = new JoyEvent(0.5,0.6,1.0,0.1);
     @Override
     public void init() {
         l.logDebug("Init Starting...");

@@ -1,14 +1,10 @@
-package com.qualcomm.ftcrobotcontroller.opmodes.auto.finished.drive_only;
-
-import com.qualcomm.ftcrobotcontroller.opmodes.auto.ModularAuto;
-
-import org.ashebots.ftcandroidlib.complexOps.AdvOpMode;
-import org.ashebots.ftcandroidlib.complexOps.Scaler;
+package org.firstinspires.ftc.teamcode.auto.finished.drive_only;
+import org.firstinspires.ftc.teamcode.auto.*;
 
 /**
  * Created by apple on 9/17/16.
  */
-public class Blue_RightBallStand extends AdvOpMode {
+public class Blue_LeftBallStand extends AdvOpMode {
     ModularAuto a;
     @Override
     public void init() {
