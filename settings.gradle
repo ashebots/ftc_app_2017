@@ -1,2 +1,7 @@
+//FTC stuff
 include ':FtcRobotController'
 include ':TeamCode'
+
+//Ashebots helper library
+include (':AB_FtcAndroidLib')
+project (':AB_FtcAndroidLib').projectDir = new File('../AB_FtcAndroidLib/FtcAndroidLib')
