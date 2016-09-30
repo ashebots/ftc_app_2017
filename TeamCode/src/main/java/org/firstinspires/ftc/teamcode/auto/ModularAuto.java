@@ -10,19 +10,21 @@ public class ModularAuto extends AutoRoutine {
     Scaler foot;
     Vector next;
     AutoRoutine special;
-    Ramp r;
+
 
     //COORDINATES
     public double[] RAMP = {1.5,1.5}; //gets onto the ramp
-    public double[] RAMP_PARK = {1.499, 1.499}; //gets onto the ramp fully
+    public double[] RAMP_PARK = {1.5, 1.5}; //gets onto the ramp fully
     public double[] CLOSE_PARK = {6,5};
     public double[] FAR_PARK = {5,6};
-    public double[] CLOSE_FARM = {4,1};
-    public double[] FAR_FARM = {1,4};
-    public double[] CLOSE_BEACON = {1.5,5.75};
-    public double[] FAR_BEACON = {1.5,9.75};
+    public double[] CLOSE_BEACON = {1.5,5};
+    public double[] FAR_BEACON = {1.5,9};
+    public double[] CLOSE_BEACON_PUSH = {1.5,5};
+    public double[] FAR_BEACON_PUSH = {1.5,9};
     public double[] CLOSE_THROW = {6,4};
     public double[] FAR_THROW = {4,4};
+    public double[] CLOSE_THROW_SCORE = {6,4};
+    public double[] FAR_THROW_SCORE = {4,4};
     public double[] LEFT_START = {5,1};
     public double[] CENTER_START = {6,1};
     public double[] RIGHT_START = {8,1};
@@ -51,9 +53,18 @@ public class ModularAuto extends AutoRoutine {
     public void between() {
         int s = getStep();
         next = new Vector(pos[s][0],pos[s][1],pos[s+1][0],pos[s+1][1],foot,chassis);
+
         if (pos[s]==RAMP_PARK) {
-            special = r;
-        } else special = null;
+            special = new Ramp(chassis);
+        } else if (pos[s]==CLOSE_BEACON_PUSH) {
+            special = new PressButton(0);
+        } else if (pos[s]==FAR_BEACON_PUSH) {
+            special = new PressButton(0);
+        } else if (pos[s]==CLOSE_THROW_SCORE) {
+            special = new ShootBall();
+        } else if (pos[s]==FAR_THROW_SCORE) {
+            special = new ShootBall();
+        } special = null;
         if (special != null) {
             special.reset();
         }
