@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.R;
 
 public class PressButton extends AutoRoutine {
+    IMUChassis chassis;
     VuforiaLocalizer localizer;
     VuforiaLocalizer.Parameters parameters;
     VuforiaTrackables visionTargets;
@@ -24,10 +25,11 @@ public class PressButton extends AutoRoutine {
 
     public static final String VUFORIA_KEY = "";
 
-    public PressButton(int t) {
+    public PressButton(IMUChassis c, int t) {
         setupVuforia(t);
         lastKnownLocation = createMatrix(0,0,0,0,0,0);
         visionTargets.activate();
+        chassis = c;
     }
     @Override
     public boolean states(int step) {
@@ -36,6 +38,38 @@ public class PressButton extends AutoRoutine {
             lastKnownLocation = latestLocation;
         //Telemetry
 
+        //State Machine
+        switch (step) {
+            case 0:
+                //turn towards buttons, roughly > 1
+                break;
+            case 1:
+                //turn towards buttons, exactly > 2
+                break;
+            case 2:
+                //move to correct distance > 3
+                break;
+            case 3:
+                //scan colors and do trig > 4
+                break;
+            case 4:
+                //do this move > 5
+                break;
+            case 5:
+                //turn paralell to wall, with BNO > 6
+                break;
+            case 6:
+                //move forward until second button > 7
+                //if on first button and should hit first button > 7
+                break;
+            case 7:
+                //press button > 8
+                break;
+            case 8:
+                //move forward dist from first button to exit > -1
+                //if moved from second button and should hit second button > -1
+                break;
+        }
         return false;
     }
     @Override
