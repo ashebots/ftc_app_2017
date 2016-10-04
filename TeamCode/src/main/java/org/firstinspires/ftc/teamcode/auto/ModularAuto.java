@@ -57,9 +57,9 @@ public class ModularAuto extends AutoRoutine {
         if (pos[s]==RAMP_PARK) {
             special = new Ramp(chassis);
         } else if (pos[s]==CLOSE_BEACON_PUSH) {
-            special = new PressButton(0);
+            special = new PressButton(chassis, 0);
         } else if (pos[s]==FAR_BEACON_PUSH) {
-            special = new PressButton(0);
+            special = new PressButton(chassis, 0);
         } else if (pos[s]==CLOSE_THROW_SCORE) {
             special = new ShootBall();
         } else if (pos[s]==FAR_THROW_SCORE) {
