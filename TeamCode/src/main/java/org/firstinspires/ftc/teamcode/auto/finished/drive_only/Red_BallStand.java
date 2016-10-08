@@ -9,7 +9,7 @@ public class Red_BallStand extends AdvOpMode {
     ModularAuto a;
     @Override
     public void init() {
-        double[][] sequence = {a.CENTER_START,a.CLOSE_PARK};
+        double[][] sequence = {ModularAuto.CENTER_START,ModularAuto.CLOSE_PARK};
         Scaler s = new Scaler();
         s.setTicksPer(1375);
         a = new ModularAuto(sequence, false, imuchassis("Left","Right","IMU"),s);

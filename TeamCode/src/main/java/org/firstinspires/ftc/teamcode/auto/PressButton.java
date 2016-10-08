@@ -1,4 +1,6 @@
 package org.firstinspires.ftc.teamcode.auto;
+import com.qualcomm.robotcore.hardware.Servo;
+
 import org.ashebots.ftcandroidlib.complexOps.*;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -19,51 +21,81 @@ public class PressButton extends AutoRoutine {
     VuforiaTrackables visionTargets;
     VuforiaTrackable target;
     VuforiaTrackableDefaultListener listener;
-
+    Servo servo;
     OpenGLMatrix lastKnownLocation;
     OpenGLMatrix phoneLocation;
 
+    Scaler foot;
+
+    int button = 0;
+    Vector moveToLoc;
+
     public static final String VUFORIA_KEY = "";
 
-    public PressButton(IMUChassis c, int t) {
+    public PressButton(IMUChassis c, Scaler s, Servo srv, int t) {
         setupVuforia(t);
         lastKnownLocation = createMatrix(0,0,0,0,0,0);
         visionTargets.activate();
         chassis = c;
+        foot = s;
+        servo = srv;
     }
     @Override
     public boolean states(int step) {
         OpenGLMatrix latestLocation = listener.getUpdatedRobotLocation();
         if (latestLocation != null)
             lastKnownLocation = latestLocation;
-        //Telemetry
-
+        //Calculate distances and angles
+        double distanceAway = 0;
+        double distanceToSide = 0;
+        double angleFromPicture = 0;
         //State Machine
         switch (step) {
             case 0:
-                //turn towards buttons, roughly > 1
+                double targ = chassis.r(-90 - chassis.angle());
+                if (targ<0) {
+                    chassis.turnMotors(-0.2);
+                } else {
+                    chassis.turnMotors(0.2);
+                }
+                state.state(Math.abs(targ)<5,1);
                 break;
             case 1:
-                //turn towards buttons, exactly > 2
+                if (angleFromPicture<0) {
+                    chassis.turnMotors(0.2);
+                } else {
+                    chassis.turnMotors(-0.2);
+                }
+                state.state(Math.abs(angleFromPicture)<0.5,2);
                 break;
             case 2:
-                //move to correct distance > 3
+                if (distanceAway<0) {
+                    chassis.setMotors(-0.05);
+                } else {
+                    chassis.setMotors(0.05);
+                }
+                state.state(Math.abs(distanceAway)<0.5,3);
                 break;
             case 3:
-                //scan colors and do trig > 4
+                //scan colors and do trig
+                button = 1;
+                moveToLoc = new Vector(distanceToSide,distanceAway,0.5,-0.25,foot,chassis);
                 break;
             case 4:
-                //do this move > 5
+                moveToLoc.run();
+                state.state(moveToLoc.getStep()==-1,5);
                 break;
             case 5:
-                //turn paralell to wall, with BNO > 6
+                chassis.turnMotors(0.2);
+                state.state(chassis.angle()>-1,6);
                 break;
             case 6:
-                //move forward until second button > 7
-                //if on first button and should hit first button > 7
+                chassis.setMotors(0.2);
+                state.state(button == 1 && chassis.mRange(foot.s(1),INF),7);
+                state.state(chassis.mRange(foot.s(1.5),INF),7);
                 break;
             case 7:
-                //press button > 8
+                servo.setPosition(50);
                 break;
             case 8:
                 //move forward dist from first button to exit > -1
@@ -73,9 +105,13 @@ public class PressButton extends AutoRoutine {
         return false;
     }
     @Override
-    public void stop() {}
+    public void stop() {
+        chassis.stop();
+    }
     @Override
-    public void between() {}
+    public void between() {
+        chassis.resetEncs();
+    }
 
     public void setupVuforia(int t) {
         parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);

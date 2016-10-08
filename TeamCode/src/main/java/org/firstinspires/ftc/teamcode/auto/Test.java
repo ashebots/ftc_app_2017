@@ -11,10 +11,11 @@ public class Test extends AdvOpMode {
     public void init(){
         Scaler s = new Scaler();
         s.setTicksPer(2750);
-        double[][] p = {a.CENTER_START,a.CLOSE_THROW,a.FAR_THROW,a.RAMP_PARK};
+        double[][] p = {ModularAuto.CENTER_START,ModularAuto.CLOSE_THROW,ModularAuto.FAR_THROW,ModularAuto.RAMP_PARK};
         a = new ModularAuto(p,false,imuchassis("Left","Right","IMU"),s);
     }
     @Override
+
     public void loop() {
         a.run();
     }
