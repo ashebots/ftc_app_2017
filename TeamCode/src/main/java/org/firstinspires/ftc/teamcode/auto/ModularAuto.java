@@ -10,7 +10,7 @@ public class ModularAuto extends AutoRoutine {
     double[][] pos;
     IMUChassis chassis;
     Scaler foot;
-    Vector next;
+    public Vector next;
     AutoRoutine special;
     Servo servo;
 
@@ -56,15 +56,15 @@ public class ModularAuto extends AutoRoutine {
         int s = getStep();
         next = new Vector(pos[s][0],pos[s][1],pos[s+1][0],pos[s+1][1],foot,chassis);
 
-        if (pos[s]==RAMP_PARK) {
+        if (pos[s+1]==RAMP_PARK) {
             special = new Ramp(chassis);
-        } else if (pos[s]==CLOSE_BEACON_PUSH) {
+        } else if (pos[s+1]==CLOSE_BEACON_PUSH) {
             special = new PressButton(chassis, foot, servo, 0);
-        } else if (pos[s]==FAR_BEACON_PUSH) {
+        } else if (pos[s+1]==FAR_BEACON_PUSH) {
             special = new PressButton(chassis, foot, servo, 0);
-        } else if (pos[s]==CLOSE_THROW_SCORE) {
+        } else if (pos[s+1]==CLOSE_THROW_SCORE) {
             special = new ShootBall();
-        } else if (pos[s]==FAR_THROW_SCORE) {
+        } else if (pos[s+1]==FAR_THROW_SCORE) {
             special = new ShootBall();
         } special = null;
         if (special != null) {
@@ -74,13 +74,14 @@ public class ModularAuto extends AutoRoutine {
 
     @Override
     public boolean states(int step) {
+        chassis.calc();
         if (next.getStep()==-1 && special !=null && special.getStep()>-1) {
             special.run();
         } else {
             next.run();
         }
         state.state(next.getStep()==-1 && (special==null || special.getStep()==-1),step+1);
-        if (getStep()-1==pos.length) {
+        if (getStep()+1==pos.length) {
             return true;
         }
         return false;
