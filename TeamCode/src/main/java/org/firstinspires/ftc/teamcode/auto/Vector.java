@@ -16,7 +16,7 @@ public class Vector extends AutoRoutine {
         x2 = s.s(x2);
         y2 = s.s(y2);
         distance = Math.sqrt(x2*x2 + y2*y2);
-        angle = c(Math.asin(x2/distance));
+        angle = c(Math.asin(y2/distance));
     }
 
     @Override
