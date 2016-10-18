@@ -7,6 +7,7 @@ import org.ashebots.ftcandroidlib.complexOps.*;
 public class Vector extends AutoRoutine {
     double angle;
     double distance;
+    public double target;
     IMUChassis chassis;
 
     public Vector(double x1, double y1, double x2, double y2, Scaler s, IMUChassis c) {
@@ -16,18 +17,28 @@ public class Vector extends AutoRoutine {
         x2 = s.s(x2);
         y2 = s.s(y2);
         distance = Math.sqrt(x2*x2 + y2*y2);
-        angle = c(Math.asin(x2/distance));
+        angle = Math.asin(x2/distance);
+        if (y2<0) {
+            if (angle>0) {
+                angle = Math.PI - angle;
+            } else {
+                angle = -Math.PI - angle;
+            }
+        }
+        angle = c(angle);
     }
 
     @Override
     public boolean states(int step) {
         switch (step) {
             case 0:
-                double target = chassis.r(angle - chassis.angle());
+                target = chassis.r(angle - chassis.angle());
+                double spd = 0.2;
+                if (Math.abs(target)<45) spd = 0.05;
                 if (target<0) {
-                    chassis.turnMotors(-0.2);
+                    chassis.turnMotors(spd);
                 } else {
-                    chassis.turnMotors(0.2);
+                    chassis.turnMotors(-spd);
                 }
                 state.state(Math.abs(target)<5,1);
                 break;
