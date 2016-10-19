@@ -7,7 +7,7 @@ import org.ashebots.ftcandroidlib.complexOps.*;
 /**
  * Created by apple on 9/17/16.
  */
-@Autonomous(name="Ball Ramp", group ="Blue")
+@Autonomous(name="Ball Ramp (Blue)", group ="Blue")
 public class Blue_BallRamp extends AdvOpMode {
     ModularAuto a;
     IMUChassis c;
@@ -27,6 +27,10 @@ public class Blue_BallRamp extends AdvOpMode {
         telemetry.addData("Pitch", c.pitch());
         telemetry.addData("Roll", c.roll());
         telemetry.addData("Target (Angle Difference)", a.next.target);
+        double[] coords = a.next.coords;
+        telemetry.addData("First Coordinate",coords[0]+", "+coords[1]);
+        telemetry.addData("Second Coordinate",coords[2]+", "+coords[3]);
+        telemetry.addData("State",a.getStep());
     }
 
     @Override

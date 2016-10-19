@@ -9,8 +9,13 @@ public class Vector extends AutoRoutine {
     double distance;
     public double target;
     IMUChassis chassis;
+    public double[] coords = new double[4];
 
     public Vector(double x1, double y1, double x2, double y2, Scaler s, IMUChassis c) {
+        coords[0] = x1;
+        coords[1] = y1;
+        coords[2] = x2;
+        coords[3] = y2;
         chassis = c;
         x2 -= x1;
         y2 -= y1;

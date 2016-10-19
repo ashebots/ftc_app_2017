@@ -31,17 +31,18 @@ public class ModularAuto extends AutoRoutine {
     static public double[] CENTER_START = {6,1};
     static public double[] RIGHT_START = {8,1};
 
-    public ModularAuto(double[][] p, boolean blue, IMUChassis c, Scaler s) {
+    public ModularAuto(double[][] position, boolean blue, IMUChassis c, Scaler s) {
         if (blue) {
-            for (int i = 0; i < p.length; i++) {
-                double x = 12-p[i][1];
-                p[i][1] = 12-p[i][0];
-                p[i][0] = x;
+            //reverses X values of all coordinates
+            for (int i = 0; i < position.length; i++) {
+                position[i][0] = 12-position[i][0];
             }
         }
-        pos = p;
+        //puts these values in the program
+        pos = position;
         chassis = c;
         foot = s;
+        //between calculates the next move. Called between because it runs between each step
         between();
     }
 
@@ -56,17 +57,24 @@ public class ModularAuto extends AutoRoutine {
         int s = getStep();
         next = new Vector(pos[s][0],pos[s][1],pos[s+1][0],pos[s+1][1],foot,chassis);
 
-        if (pos[s+1]==RAMP_PARK) {
+        if (pos[s+1]==ModularAuto.RAMP_PARK) {
             special = new Ramp(chassis);
-        } else if (pos[s+1]==CLOSE_BEACON_PUSH) {
+        }
+        else if (pos[s+1]==ModularAuto.CLOSE_BEACON_PUSH) {
             special = new PressButton(chassis, foot, servo, 0);
-        } else if (pos[s+1]==FAR_BEACON_PUSH) {
+        }
+        else if (pos[s+1]==ModularAuto.FAR_BEACON_PUSH) {
             special = new PressButton(chassis, foot, servo, 0);
-        } else if (pos[s+1]==CLOSE_THROW_SCORE) {
+        }
+        else if (pos[s+1]==ModularAuto.CLOSE_THROW_SCORE) {
             special = new ShootBall();
-        } else if (pos[s+1]==FAR_THROW_SCORE) {
+        }
+        else if (pos[s+1]==ModularAuto.FAR_THROW_SCORE) {
             special = new ShootBall();
-        } special = null;
+        }
+        else {
+            special = null;
+        }
         if (special != null) {
             special.reset();
         }
