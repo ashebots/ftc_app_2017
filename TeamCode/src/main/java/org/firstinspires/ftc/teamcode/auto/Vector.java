@@ -5,7 +5,7 @@ import org.ashebots.ftcandroidlib.complexOps.*;
  * Created by apple on 9/15/16.
  */
 public class Vector extends AutoRoutine {
-    double angle;
+    public double angle;
     double distance;
     public double target;
     IMUChassis chassis;
@@ -38,8 +38,8 @@ public class Vector extends AutoRoutine {
         switch (step) {
             case 0:
                 target = chassis.r(angle - chassis.angle());
-                double spd = 0.2;
-                if (Math.abs(target)<45) spd = 0.05;
+                double spd = 0.75;
+                if (Math.abs(target)<75) spd = Math.abs(target)/100;
                 if (target<0) {
                     chassis.turnMotors(spd);
                 } else {
@@ -48,7 +48,7 @@ public class Vector extends AutoRoutine {
                 state.state(Math.abs(target)<5,1);
                 break;
             case 1:
-                chassis.setMotors(0.75);
+                chassis.setMotors(1);
                 if (chassis.aRange(distance,INF)) {
                     return true;
                 }
