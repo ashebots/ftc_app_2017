@@ -17,7 +17,6 @@ public class SimpleTeleOp extends AdvOpMode {
     AdvMotor accelerator;
     BoolEvent yButton = new BoolEvent();
     BoolEvent bButton = new BoolEvent();
-    Timer t = new Timer();
 
     boolean accTog;
     boolean frtTog;
@@ -30,11 +29,6 @@ public class SimpleTeleOp extends AdvOpMode {
         bottom.setPosition(0.5);
         accelerator = mtr("Accelerator");
         lift = mtr("Lift");
-    }
-
-    @Override
-    public void start() {
-        t.resetTimer();
     }
 
     @Override
@@ -64,32 +58,30 @@ public class SimpleTeleOp extends AdvOpMode {
         double botSpd = 0.5;
         int  conflicts = 0; //count how many are held down at once, 2 or more is bad
         if (gamepad1.left_trigger>0) {
-            topSpd = botSpd = 0;
-            conflicts++;
-        }
-        if (gamepad1.left_bumper) {
             topSpd = botSpd = 1;
             conflicts++;
         }
-        if (gamepad1.dpad_up) {
-            topSpd = 0;
+        if (gamepad1.left_bumper) {
+            topSpd = botSpd = 0;
             conflicts++;
         }
-        if (gamepad1.dpad_down) {
+        if (gamepad1.dpad_up) {
             topSpd = 1;
             conflicts++;
         }
-        if (conflicts < 2) { //If more than one are held down, just don't change it.
-            top.setPosition(-topSpd);
-            bottom.setPosition(-botSpd);
+        if (gamepad1.dpad_down) {
+            topSpd = 0;
+            conflicts++;
         }
-        t.getValues();
-        if (gamepad1.right_bumper && t.tRange(90000)) {
+        if (conflicts < 2) { //If more than one are held down, just don't change it.
+            top.setPosition(topSpd);
+            bottom.setPosition(botSpd);
+        }
+        if (gamepad1.right_bumper) {
             lift.setMotor(1);
-        } else if (gamepad1.right_trigger>0 && t.tRange(90000)) {
+        } else if (gamepad1.right_trigger>0) {
             lift.setMotor(-1);
         } else lift.setMotor(0);
-        t.calibrate();
     }
     @Override
     public void stop() {
