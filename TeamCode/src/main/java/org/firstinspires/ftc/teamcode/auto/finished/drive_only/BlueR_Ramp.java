@@ -7,14 +7,16 @@ import org.ashebots.ftcandroidlib.complexOps.*;
 /**
  * Created by apple on 9/17/16.
  */
-public class Red_BallRamp extends AdvOpMode {
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+@Autonomous(name="[BlueR] Ramp")
+public class BlueR_Ramp extends AdvOpMode {
     ModularAuto a;
     @Override
     public void init() {
-        double[][] sequence = {ModularAuto.CENTER_START,ModularAuto.CLOSE_PARK,ModularAuto.RAMP_PARK};
+        double[][] sequence = {ModularAuto.LEFT_START,ModularAuto.FAR_THROW,ModularAuto.RAMP_PARK};
         Scaler s = new Scaler();
-        s.setTicksPer(1375);
-        a = new ModularAuto(sequence, false, imuchassis("Left","Right","IMU"),s);
+        s.setTicksPer(916);
+        a = new ModularAuto(sequence, true, imuchassis("Left","Right","IMU"),s);
     }
 
     @Override

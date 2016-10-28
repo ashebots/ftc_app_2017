@@ -13,33 +13,27 @@ public class ModularAuto extends AutoRoutine {
     public Vector next;
     AutoRoutine special;
     Servo servo;
-    boolean blueLast = false;
+    boolean blue = false;
 
     //COORDINATES
     static public double[] RAMP = {1.5,1.5}; //gets onto the ramp
     static public double[] RAMP_PARK = {1.5, 1.5}; //gets onto the ramp fully
-    static public double[] CLOSE_PARK = {6,4.75};
-    static public double[] FAR_PARK = {4.75,6};
+    static public double[] CLOSE_PARK = {6,5.25};
+    static public double[] FAR_PARK = {5.25,6};
     static public double[] CLOSE_BEACON = {1.5,5};
     static public double[] FAR_BEACON = {1.5,9};
     static public double[] CLOSE_BEACON_PUSH = {1.5,5};
     static public double[] FAR_BEACON_PUSH = {1.5,9};
-    static public double[] CLOSE_THROW = {6,4};
-    static public double[] FAR_THROW = {4,4};
-    static public double[] CLOSE_THROW_SCORE = {6,4};
-    static public double[] FAR_THROW_SCORE = {4,4};
-    static public double[] LEFT_START = {5,0.75};
+    static public double[] CLOSE_THROW = {6,3};
+    static public double[] FAR_THROW = {4,3};
+    static public double[] CLOSE_THROW_SCORE = {6,3};
+    static public double[] FAR_THROW_SCORE = {4,3};
+    static public double[] LEFT_START = {4,0.75};
     static public double[] CENTER_START = {6,0.75};
     static public double[] RIGHT_START = {8,0.75};
 
     public ModularAuto(double[][] position, boolean blue, IMUChassis c, Scaler s) {
-        if (blue != blueLast) {
-            //reverses X values of all coordinates if the color changed
-            for (int i = 0; i < position.length; i++) {
-                position[i][0] = 12-position[i][0];
-            }
-        }
-        blueLast = blue;
+        this.blue = blue;
         //puts these values in the program
         pos = position;
         chassis = c;
@@ -57,7 +51,9 @@ public class ModularAuto extends AutoRoutine {
     @Override
     public void between() {
         int s = getStep();
-        next = new Vector(pos[s][0],pos[s][1],pos[s+1][0],pos[s+1][1],foot,chassis);
+        if (blue) { //switch
+            next = new Vector(12 - pos[s][0], pos[s][1], 12 - pos[s + 1][0], pos[s + 1][1], foot, chassis); //blue
+        } else next = new Vector(pos[s][0],pos[s][1],pos[s+1][0],pos[s+1][1],foot,chassis); //red
 
         if (pos[s+1]==ModularAuto.RAMP_PARK) {
             special = new Ramp(chassis);

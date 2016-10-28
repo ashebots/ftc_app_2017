@@ -1,17 +1,21 @@
 package org.firstinspires.ftc.teamcode.auto.finished.drive_only;
+
+import org.ashebots.ftcandroidlib.complexOps.AdvOpMode;
+import org.ashebots.ftcandroidlib.complexOps.Scaler;
 import org.firstinspires.ftc.teamcode.auto.ModularAuto;
-import org.ashebots.ftcandroidlib.complexOps.*;
 
 /**
  * Created by apple on 9/17/16.
  */
-public class Red_RightBallStand extends AdvOpMode {
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+@Autonomous(name="[RedR] Ramp")
+public class RedF_Ramp extends AdvOpMode {
     ModularAuto a;
     @Override
     public void init() {
-        double[][] sequence = {ModularAuto.RIGHT_START,ModularAuto.CLOSE_PARK};
+        double[][] sequence = {ModularAuto.RIGHT_START,ModularAuto.FAR_THROW,ModularAuto.RAMP_PARK};
         Scaler s = new Scaler();
-        s.setTicksPer(1375);
+        s.setTicksPer(916);
         a = new ModularAuto(sequence, false, imuchassis("Left","Right","IMU"),s);
     }
 

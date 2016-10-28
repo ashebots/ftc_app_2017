@@ -11,21 +11,32 @@ public class SimpleTeleOp extends AdvOpMode {
     Chassis chassis;
     JoyEvent n = new JoyEvent(0.4,0.45,0.9);
     JoyEvent f = new JoyEvent(0.9,1.0,1.0);
+    AdvMotor lift;
     Servo top;
     Servo bottom;
     AdvMotor accelerator;
     BoolEvent yButton = new BoolEvent();
+    BoolEvent bButton = new BoolEvent();
+    Timer t = new Timer();
 
     boolean accTog;
+    boolean frtTog;
     @Override
     public void init() {
-        chassis = chassis("Left","Right");
+        chassis = chassis("Left", "Right");
         top = srv("Top");
         bottom = srv("Bottom");
         top.setPosition(0.5);
         bottom.setPosition(0.5);
         accelerator = mtr("Accelerator");
+        lift = mtr("Lift");
     }
+
+    @Override
+    public void start() {
+        t.resetTimer();
+    }
+
     @Override
     public void loop() {
         //Motor calculations
@@ -33,13 +44,20 @@ public class SimpleTeleOp extends AdvOpMode {
         if (gamepad1.x) {
             mVals = f.calc(gamepad1.left_stick_x,gamepad1.left_stick_y);
         }
+        frtTog = (frtTog ^ bButton.parse(gamepad1.b).equals("PRESSED"));
+        if (frtTog) {
+            double placeholder = mVals[0];
+            mVals[0] = -mVals[1];
+            mVals[1] = -placeholder;
+        }
         chassis.moveMotors(mVals[0], mVals[1]);
+
         telemetry.addData("Left", mVals[0]);
         telemetry.addData("Right", mVals[1]);
         //Toggle accelerator
         accTog = (accTog ^ yButton.parse(gamepad1.y).equals("PRESSED"));
         if (accTog) {
-            accelerator.setMotor(1);
+            accelerator.setMotor(0.5);
         } else accelerator.setMotor(0);
         //Servo controls
         double topSpd = 0.5;
@@ -62,9 +80,16 @@ public class SimpleTeleOp extends AdvOpMode {
             conflicts++;
         }
         if (conflicts < 2) { //If more than one are held down, just don't change it.
-            top.setPosition(topSpd);
-            bottom.setPosition(botSpd);
+            top.setPosition(-topSpd);
+            bottom.setPosition(-botSpd);
         }
+        t.getValues();
+        if (gamepad1.right_bumper && t.tRange(90000)) {
+            lift.setMotor(1);
+        } else if (gamepad1.right_trigger>0 && t.tRange(90000)) {
+            lift.setMotor(-1);
+        } else lift.setMotor(0);
+        t.calibrate();
     }
     @Override
     public void stop() {

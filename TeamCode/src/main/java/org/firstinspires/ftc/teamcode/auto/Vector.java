@@ -38,8 +38,8 @@ public class Vector extends AutoRoutine {
         switch (step) {
             case 0:
                 target = chassis.r(angle - chassis.angle());
-                double spd = 0.75;
-                if (Math.abs(target)<75) spd = Math.abs(target)/100;
+                double spd = 0.375;
+                if (Math.abs(target) < 37.5) spd = Math.abs(target / 100); //gradual decrease
                 if (target<0) {
                     chassis.turnMotors(spd);
                 } else {
@@ -48,7 +48,9 @@ public class Vector extends AutoRoutine {
                 state.state(Math.abs(target)<5,1);
                 break;
             case 1:
-                chassis.setMotors(1);
+                spd = 0.75;
+                if (distance-chassis.encoderLeft<300) spd = (distance-chassis.encoderLeft) / 400; //gradual decrease
+                chassis.setMotors(spd);
                 if (chassis.aRange(distance,INF)) {
                     return true;
                 }
@@ -65,6 +67,11 @@ public class Vector extends AutoRoutine {
     @Override
     public void between() {
         chassis.stop();
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         chassis.resetEncs();
     }
     public double c(double r) {

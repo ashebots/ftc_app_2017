@@ -13,17 +13,11 @@ public class Ramp extends AutoRoutine {
 
     @Override
     public boolean states(int step) {
-        switch (step) {
-            case 0:
-                chassis.setMotors(0.5);
-                state.state(chassis.PRange(20,INF),1);
-                break;
-            case 1:
-                chassis.setMotors(0.5);
-                if (chassis.aRange(1500,INF)) return true;
-        }
+        chassis.setMotors(0.5);
+        if (chassis.PRange(5, INF)) return true;
         return false;
     }
+
 
     @Override
     public void stop() {
