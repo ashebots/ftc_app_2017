@@ -8,10 +8,11 @@ import org.ashebots.ftcandroidlib.complexOps.*;
 
 public class SimpleTeleOp extends AdvOpMode {
     //Define hardware
+    AdvMotor lift;
     Chassis chassis;
     JoyEvent n = new JoyEvent(0.4,0.45,0.9);
     JoyEvent f = new JoyEvent(0.9,1.0,1.0);
-    AdvMotor lift;
+
     Servo top;
     Servo bottom;
     AdvMotor accelerator;
@@ -22,13 +23,15 @@ public class SimpleTeleOp extends AdvOpMode {
     boolean frtTog;
     @Override
     public void init() {
+        lift = mtr("Lift");
         chassis = chassis("Left", "Right");
         top = srv("Top");
         bottom = srv("Bottom");
         top.setPosition(0.5);
         bottom.setPosition(0.5);
         accelerator = mtr("Accelerator");
-        lift = mtr("Lift");
+
+
     }
 
     @Override
@@ -81,7 +84,9 @@ public class SimpleTeleOp extends AdvOpMode {
             lift.setMotor(1);
         } else if (gamepad1.right_trigger>0) {
             lift.setMotor(-1);
-        } else lift.setMotor(0);
+        } else {
+            lift.setMotor(0);
+        }
     }
     @Override
     public void stop() {

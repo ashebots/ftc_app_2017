@@ -17,29 +17,33 @@ public class Vector extends AutoRoutine {
         coords[2] = x2;
         coords[3] = y2;
         chassis = c;
-        x2 -= x1;
-        y2 -= y1;
-        x2 = s.s(x2);
-        y2 = s.s(y2);
+            x2 -= x1;      //pythag theorem
+            y2 -= y1;
+            x2 = s.s(x2);
+            y2 = s.s(y2);
         distance = Math.sqrt(x2*x2 + y2*y2);
-        angle = Math.asin(x2/distance);
-        if (y2<0) {
-            if (angle>0) {
-                angle = Math.PI - angle;
-            } else {
-                angle = -Math.PI - angle;
+        angle = Math.asin(x2/distance); //still Pythag
+
+                 //Finds what direction it needs to turn
+            if (y2<0) {
+             if (angle>0) {
+                   angle = Math.PI - angle;
+                } else {
+                    angle = -Math.PI - angle;
             }
         }
-        angle = c(angle);
+        angle = c(angle);  //remember c is chassis, What does that mean?
     }
 
     @Override
     public boolean states(int step) {
         switch (step) {
             case 0:
-                target = chassis.r(angle - chassis.angle());
+                target = chassis.r(angle - chassis.angle()); //target it the angle of the wanted vector
                 double spd = 0.375;
-                if (Math.abs(target) < 37.5) spd = Math.abs(target / 100); //gradual decrease
+                if (Math.abs(target) < 37.5){
+                    spd = Math.abs(target / 100); //gradual decrease
+                }
                 if (target<0) {
                     chassis.turnMotors(spd);
                 } else {

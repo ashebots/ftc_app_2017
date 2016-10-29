@@ -15,7 +15,7 @@ public class ModularAuto extends AutoRoutine {
     Servo servo;
     boolean blue = false;
 
-    //COORDINATES
+    //COORDINATES in feet
     static public double[] RAMP = {1.5,1.5}; //gets onto the ramp
     static public double[] RAMP_PARK = {1.5, 1.5}; //gets onto the ramp fully
     static public double[] CLOSE_PARK = {6,5.25};
@@ -49,6 +49,7 @@ public class ModularAuto extends AutoRoutine {
     }
 
     @Override
+    //this code does
     public void between() {
         int s = getStep();
         if (blue) { //switch
