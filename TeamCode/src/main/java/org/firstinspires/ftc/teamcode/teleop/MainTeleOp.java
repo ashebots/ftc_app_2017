@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.hardware.*;
 
 import org.ashebots.ftcandroidlib.complexOps.*;
 
-@TeleOp(name="Drive", group ="TeleOp")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Drive", group ="TeleOp")
 
-public class SimpleTeleOp extends AdvOpMode {
+public class MainTeleOp extends AdvOpMode {
     //Define hardware
     AdvMotor lift;
     Chassis chassis;
@@ -18,9 +18,11 @@ public class SimpleTeleOp extends AdvOpMode {
     AdvMotor accelerator;
     BoolEvent yButton = new BoolEvent();
     BoolEvent bButton = new BoolEvent();
+    BoolEvent xButton = new BoolEvent();
 
     boolean accTog;
     boolean frtTog;
+    boolean spdTog;
     @Override
     public void init() {
         lift = mtr("Lift");
@@ -38,7 +40,8 @@ public class SimpleTeleOp extends AdvOpMode {
     public void loop() {
         //Motor calculations
         double[] mVals = n.calc(gamepad1.left_stick_x,gamepad1.left_stick_y);
-        if (gamepad1.x) {
+        spdTog = (spdTog ^ xButton.parse(gamepad1.x).equals("PRESSED"));
+        if (spdTog) {
             mVals = f.calc(gamepad1.left_stick_x,gamepad1.left_stick_y);
         }
         frtTog = (frtTog ^ bButton.parse(gamepad1.b).equals("PRESSED"));
@@ -54,7 +57,7 @@ public class SimpleTeleOp extends AdvOpMode {
         //Toggle accelerator
         accTog = (accTog ^ yButton.parse(gamepad1.y).equals("PRESSED"));
         if (accTog) {
-            accelerator.setMotor(0.5);
+            accelerator.setMotor(1);
         } else accelerator.setMotor(0);
         //Servo controls
         double topSpd = 0.5;

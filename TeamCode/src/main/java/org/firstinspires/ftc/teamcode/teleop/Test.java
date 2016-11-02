@@ -1,11 +1,9 @@
 package org.firstinspires.ftc.teamcode.teleop;
-import com.qualcomm.hardware.adafruit.AdafruitBNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.*;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.ashebots.ftcandroidlib.complexOps.*;
 
-@TeleOp(name="IMU Test", group ="TeleOp")
+@MainTeleOp(name="IMU Test", group ="TeleOp")
 @Disabled
 public class Test extends AdvOpMode {
     IMUChassis chassis;

@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.auto;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.ashebots.ftcandroidlib.complexOps.*;
@@ -13,6 +14,9 @@ public class ModularAuto extends AutoRoutine {
     public Vector next;
     AutoRoutine special;
     Servo servo;
+    Servo bottom;
+    Servo top;
+    DcMotor accelerator;
     boolean blue = false;
 
     //COORDINATES in feet
@@ -32,6 +36,9 @@ public class ModularAuto extends AutoRoutine {
     static public double[] CENTER_START = {6,0.75};
     static public double[] RIGHT_START = {8,0.75};
 
+    int wait = 0;
+    Timer timer = new Timer();
+
     public ModularAuto(double[][] position, boolean blue, IMUChassis c, Scaler s) {
         this.blue = blue;
         //puts these values in the program
@@ -40,6 +47,17 @@ public class ModularAuto extends AutoRoutine {
         foot = s;
         //between calculates the next move. Called between because it runs between each step
         between();
+    }
+
+    public ModularAuto(double[][] position, boolean blue, IMUChassis c, Scaler s, int time) {
+        this.blue = blue;
+        //puts these values in the program
+        pos = position;
+        chassis = c;
+        foot = s;
+        //between calculates the next move. Called between because it runs between each step
+        between();
+        wait = time;
     }
 
     @Override
@@ -79,8 +97,15 @@ public class ModularAuto extends AutoRoutine {
         }
     }
 
+    public void resetTimer() {
+        timer.resetTimer();
+    }
+
     @Override
     public boolean states(int step) {
+        if (!timer.tRange(wait)) {
+            return false;
+        }
         chassis.calc();
         if (next.getStep()==-1 && special !=null && special.getStep()>-1) {
             special.run();

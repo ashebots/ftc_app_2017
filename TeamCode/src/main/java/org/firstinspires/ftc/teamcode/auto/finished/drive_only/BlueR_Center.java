@@ -14,7 +14,11 @@ public class BlueR_Center extends AdvOpMode {
         double[][] sequence = {ModularAuto.LEFT_START,ModularAuto.FAR_THROW,ModularAuto.CLOSE_THROW,ModularAuto.CLOSE_PARK};
         Scaler s = new Scaler();
         s.setTicksPer(916);
-        a = new ModularAuto(sequence, true, imuchassis("Left","Right","IMU"),s);
+        a = new ModularAuto(sequence, true, imuchassis("Left","Right","IMU"),s,7500);
+    }
+    @Override
+    public void start() {
+        a.resetTimer();
     }
 
     @Override
