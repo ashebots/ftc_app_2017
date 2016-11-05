@@ -3,7 +3,7 @@ import com.qualcomm.robotcore.eventloop.opmode.*;
 
 import org.ashebots.ftcandroidlib.complexOps.*;
 
-@MainTeleOp(name="IMU Test", group ="TeleOp")
+@TeleOp(name="IMU Test", group ="TeleOp")
 @Disabled
 public class Test extends AdvOpMode {
     IMUChassis chassis;
@@ -17,7 +17,6 @@ public class Test extends AdvOpMode {
     public void loop() {
         double[] mVals = n.calc(gamepad1.left_stick_x,gamepad1.left_stick_y);
         chassis.moveMotors(mVals[0], mVals[1]);
-        chassis.calc();
         telemetry.addData("Angle",chassis.angle());
         telemetry.addData("Pitch",chassis.pitch());
         telemetry.addData("Roll",chassis.roll());

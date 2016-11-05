@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode.auto;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.ashebots.ftcandroidlib.complexOps.*;
@@ -14,9 +13,8 @@ public class ModularAuto extends AutoRoutine {
     public Vector next;
     AutoRoutine special;
     Servo servo;
-    Servo bottom;
-    Servo top;
-    DcMotor accelerator;
+    public AdvMotor sweeper;
+    public AdvMotor accelerator;
     boolean blue = false;
 
     //COORDINATES in feet
@@ -28,10 +26,10 @@ public class ModularAuto extends AutoRoutine {
     static public double[] FAR_BEACON = {1.5,9};
     static public double[] CLOSE_BEACON_PUSH = {1.5,5};
     static public double[] FAR_BEACON_PUSH = {1.5,9};
-    static public double[] CLOSE_THROW = {6,3};
-    static public double[] FAR_THROW = {4,3};
-    static public double[] CLOSE_THROW_SCORE = {6,3};
-    static public double[] FAR_THROW_SCORE = {4,3};
+    static public double[] CLOSE_HUB = {6,3.5};
+    static public double[] FAR_HUB = {4,3.5};
+    static public double[] CLOSE_THROW = {6,2.88};
+    static public double[] FAR_THROW = {4,2.88};
     static public double[] LEFT_START = {4,0.75};
     static public double[] CENTER_START = {6,0.75};
     static public double[] RIGHT_START = {8,0.75};
@@ -39,7 +37,7 @@ public class ModularAuto extends AutoRoutine {
     int wait = 0;
     Timer timer = new Timer();
 
-    public ModularAuto(double[][] position, boolean blue, IMUChassis c, Scaler s) {
+    public ModularAuto(double[][] position, boolean blue, IMUChassis c, Scaler s, AdvMotor accelerator, AdvMotor sweeper) {
         this.blue = blue;
         //puts these values in the program
         pos = position;
@@ -49,7 +47,7 @@ public class ModularAuto extends AutoRoutine {
         between();
     }
 
-    public ModularAuto(double[][] position, boolean blue, IMUChassis c, Scaler s, int time) {
+    public ModularAuto(double[][] position, boolean blue, IMUChassis c, Scaler s, AdvMotor accelerator, AdvMotor sweeper, int time) {
         this.blue = blue;
         //puts these values in the program
         pos = position;
@@ -83,11 +81,11 @@ public class ModularAuto extends AutoRoutine {
         else if (pos[s+1]==ModularAuto.FAR_BEACON_PUSH) {
             special = new PressButton(chassis, foot, servo, 0);
         }
-        else if (pos[s+1]==ModularAuto.CLOSE_THROW_SCORE) {
-            special = new ShootBall();
+        else if (pos[s+1]==ModularAuto.CLOSE_THROW) {
+            special = new ShootBall(chassis, sweeper, accelerator, -20.3);
         }
-        else if (pos[s+1]==ModularAuto.FAR_THROW_SCORE) {
-            special = new ShootBall();
+        else if (pos[s+1]==ModularAuto.FAR_THROW) {
+            special = new ShootBall(chassis, sweeper, accelerator, 20.3);
         }
         else {
             special = null;
@@ -97,16 +95,17 @@ public class ModularAuto extends AutoRoutine {
         }
     }
 
-    public void resetTimer() {
-        timer.resetTimer();
-    }
+    boolean reset = true;
 
     @Override
     public boolean states(int step) {
+        if (reset) {
+            reset = false;
+            timer.resetTimer();
+        }
         if (!timer.tRange(wait)) {
             return false;
         }
-        chassis.calc();
         if (next.getStep()==-1 && special !=null && special.getStep()>-1) {
             special.run();
         } else {

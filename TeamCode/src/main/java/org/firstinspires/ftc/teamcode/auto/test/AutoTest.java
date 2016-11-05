@@ -15,9 +15,9 @@ public class AutoTest extends AdvOpMode {
     public void init() {
         double[][] sequence = {ModularAuto.CENTER_START,ModularAuto.CLOSE_PARK,ModularAuto.RAMP_PARK};
         Scaler s = new Scaler();
-        s.setTicksPer(2750);
+        s.setTicksPer(916);
         c = imuchassis("Left","Right","IMU");
-        a = new ModularAuto(sequence, false, c,s);
+        a = new ModularAuto(sequence, false, c,s,null,null);
     }
 
     @Override

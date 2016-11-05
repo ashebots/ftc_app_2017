@@ -11,10 +11,10 @@ public class BlueF_Center extends AdvOpMode {
     ModularAuto a;
     @Override
     public void init() {
-        double[][] sequence = {ModularAuto.RIGHT_START,ModularAuto.CLOSE_THROW,ModularAuto.CLOSE_PARK};
+        double[][] sequence = {ModularAuto.RIGHT_START,ModularAuto.CLOSE_HUB,ModularAuto.CLOSE_PARK};
         Scaler s = new Scaler();
         s.setTicksPer(916);
-        a = new ModularAuto(sequence, true, imuchassis("Left","Right","IMU"),s);
+        a = new ModularAuto(sequence, true, imuchassis("Left","Right","IMU"),s,null,null);
     }
 
     @Override

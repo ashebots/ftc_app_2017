@@ -25,7 +25,6 @@ public class RampTest extends AdvOpMode
 
     @Override
     public void loop () {
-        chassis.calc();
         ramp.run();
 
         telemetry.addData("Pitch", chassis.pitch());

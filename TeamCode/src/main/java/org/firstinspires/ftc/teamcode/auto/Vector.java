@@ -9,6 +9,7 @@ public class Vector extends AutoRoutine {
     double distance;
     public double target;
     IMUChassis chassis;
+    Scaler foot;
     public double[] coords = new double[4];
 
     public Vector(double x1, double y1, double x2, double y2, Scaler s, IMUChassis c) {
@@ -32,7 +33,8 @@ public class Vector extends AutoRoutine {
                     angle = -Math.PI - angle;
             }
         }
-        angle = c(angle);  //remember c is chassis, What does that mean?
+        angle = c(angle);  //C converts from radians to degrees
+        foot = s;
     }
 
     @Override
@@ -53,7 +55,7 @@ public class Vector extends AutoRoutine {
                 break;
             case 1:
                 spd = 0.75;
-                if (distance-chassis.encoderLeft<300) spd = (distance-chassis.encoderLeft) / 400; //gradual decrease
+                if (distance-chassis.encoderLeft<foot.s(1.5)) spd = (distance-chassis.encoderLeft) / (foot.s(1.5)*4/3); //gradual decrease
                 chassis.setMotors(spd);
                 if (chassis.aRange(distance,INF)) {
                     return true;

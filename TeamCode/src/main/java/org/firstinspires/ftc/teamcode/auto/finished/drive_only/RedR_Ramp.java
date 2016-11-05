@@ -13,10 +13,10 @@ public class RedR_Ramp extends AdvOpMode {
     ModularAuto a;
     @Override
     public void init() {
-        double[][] sequence = {ModularAuto.LEFT_START,ModularAuto.FAR_THROW,ModularAuto.RAMP_PARK};
+        double[][] sequence = {ModularAuto.LEFT_START,ModularAuto.FAR_HUB,ModularAuto.RAMP_PARK};
         Scaler s = new Scaler();
         s.setTicksPer(916);
-        a = new ModularAuto(sequence, false, imuchassis("Left","Right","IMU"),s);
+        a = new ModularAuto(sequence, false, imuchassis("Left","Right","IMU"),s,null,null);
     }
 
     @Override

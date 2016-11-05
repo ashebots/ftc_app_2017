@@ -13,8 +13,7 @@ public class MainTeleOp extends AdvOpMode {
     JoyEvent n = new JoyEvent(0.4,0.45,0.9);
     JoyEvent f = new JoyEvent(0.9,1.0,1.0);
 
-    Servo top;
-    Servo bottom;
+    AdvMotor sweeper;
     AdvMotor accelerator;
     BoolEvent yButton = new BoolEvent();
     BoolEvent bButton = new BoolEvent();
@@ -27,13 +26,8 @@ public class MainTeleOp extends AdvOpMode {
     public void init() {
         lift = mtr("Lift");
         chassis = chassis("Left", "Right");
-        top = srv("Top");
-        bottom = srv("Bottom");
-        top.setPosition(0.5);
-        bottom.setPosition(0.5);
+        sweeper = mtr("Sweeper");
         accelerator = mtr("Accelerator");
-
-
     }
 
     @Override
@@ -59,30 +53,13 @@ public class MainTeleOp extends AdvOpMode {
         if (accTog) {
             accelerator.setMotor(1);
         } else accelerator.setMotor(0);
-        //Servo controls
-        double topSpd = 0.5;
-        double botSpd = 0.5;
-        int  conflicts = 0; //count how many are held down at once, 2 or more is bad
+        //Sweeper controls
         if (gamepad1.left_trigger>0) {
-            topSpd = botSpd = 1;
-            conflicts++;
-        }
-        if (gamepad1.left_bumper) {
-            topSpd = botSpd = 0;
-            conflicts++;
-        }
-        if (gamepad1.dpad_up) {
-            topSpd = 1;
-            conflicts++;
-        }
-        if (gamepad1.dpad_down) {
-            topSpd = 0;
-            conflicts++;
-        }
-        if (conflicts < 2) { //If more than one are held down, just don't change it.
-            top.setPosition(topSpd);
-            bottom.setPosition(botSpd);
-        }
+            sweeper.setMotor(-1);
+        } else if (gamepad1.left_bumper) {
+            sweeper.setMotor(1);
+        } else sweeper.stop();
+        //Lift
         if (gamepad1.right_bumper) {
             lift.setMotor(1);
         } else if (gamepad1.right_trigger>0) {
