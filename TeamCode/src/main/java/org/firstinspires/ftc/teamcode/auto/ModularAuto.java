@@ -43,6 +43,8 @@ public class ModularAuto extends AutoRoutine {
         pos = position;
         chassis = c;
         foot = s;
+        this.accelerator = accelerator;
+        this.sweeper = sweeper;
         //between calculates the next move. Called between because it runs between each step
         between();
     }
@@ -56,6 +58,8 @@ public class ModularAuto extends AutoRoutine {
         //between calculates the next move. Called between because it runs between each step
         between();
         wait = time;
+        this.accelerator = accelerator;
+        this.sweeper = sweeper;
     }
 
     @Override
