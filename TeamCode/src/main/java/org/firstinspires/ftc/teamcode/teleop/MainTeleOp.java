@@ -52,7 +52,11 @@ public class MainTeleOp extends AdvOpMode {
         accTog = (accTog ^ yButton.parse(gamepad1.y).equals("PRESSED"));
         if (accTog) {
             accelerator.setMotor(1);
-        } else accelerator.setMotor(0);
+        } else if (gamepad1.start) {
+            accelerator.setMotor(-0.05);
+        } else {
+            accelerator.stop();
+        }
         //Sweeper controls
         if (gamepad1.left_trigger>0) {
             sweeper.setMotor(-1);
