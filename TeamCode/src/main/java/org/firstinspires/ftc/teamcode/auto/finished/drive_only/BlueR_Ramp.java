@@ -13,9 +13,9 @@ public class BlueR_Ramp extends AdvOpMode {
     ModularAuto a;
     @Override
     public void init() {
-        double[][] sequence = {ModularAuto.LEFT_START,ModularAuto.FAR_HUB,ModularAuto.RAMP_PARK};
+        double[][] sequence = {ModularAuto.LEFT_START,ModularAuto.FAR_THROW,ModularAuto.RAMP_PARK};
         Scaler s = new Scaler();
-        s.setTicksPer(916);
+        s.setTicksPer(700);
         a = new ModularAuto(sequence, true, imuchassis("Left","Right","IMU"),s,null,null);
     }
 

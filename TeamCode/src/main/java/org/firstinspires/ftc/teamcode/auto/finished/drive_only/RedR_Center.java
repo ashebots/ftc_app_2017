@@ -13,9 +13,9 @@ public class RedR_Center extends AdvOpMode {
     ModularAuto a;
     @Override
     public void init() {
-        double[][] sequence = {ModularAuto.LEFT_START,ModularAuto.FAR_HUB,ModularAuto.CLOSE_HUB,ModularAuto.CLOSE_PARK};
+        double[][] sequence = {ModularAuto.LEFT_START,ModularAuto.FAR_HUB,ModularAuto.CLOSE_THROW,ModularAuto.CLOSE_PARK};
         Scaler s = new Scaler();
-        s.setTicksPer(916);
+        s.setTicksPer(700);
         a = new ModularAuto(sequence, false, imuchassis("Left","Right","IMU"),s,null,null,7500);
     }
 

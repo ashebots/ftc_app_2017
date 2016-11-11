@@ -28,8 +28,8 @@ public class ModularAuto extends AutoRoutine {
     static public double[] FAR_BEACON_PUSH = {1.5,9};
     static public double[] CLOSE_HUB = {6,3.5};
     static public double[] FAR_HUB = {4,3.5};
-    static public double[] CLOSE_THROW = {6,2.88};
-    static public double[] FAR_THROW = {4,2.88};
+    static public double[] CLOSE_THROW = {6,2.5};
+    static public double[] FAR_THROW = {4,2.5};
     static public double[] LEFT_START = {4,0.75};
     static public double[] CENTER_START = {6,0.75};
     static public double[] RIGHT_START = {8,0.75};
@@ -86,10 +86,10 @@ public class ModularAuto extends AutoRoutine {
             special = new PressButton(chassis, foot, servo, 0);
         }
         else if (pos[s+1]==ModularAuto.CLOSE_THROW) {
-            special = new ShootBall(chassis, sweeper, accelerator, -20.3);
+            special = new ShootBall(chassis, sweeper, accelerator, -15);
         }
         else if (pos[s+1]==ModularAuto.FAR_THROW) {
-            special = new ShootBall(chassis, sweeper, accelerator, 20.3);
+            special = new ShootBall(chassis, sweeper, accelerator, 15);
         }
         else {
             special = null;

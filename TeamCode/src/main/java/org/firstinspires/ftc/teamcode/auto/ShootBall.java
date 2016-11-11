@@ -33,7 +33,7 @@ public class ShootBall extends AutoRoutine {
         if (step==1) {
             accelerator.setMotor(1);
             if (timer.tRange(1500)) {
-                sweeper.setMotor(1);
+                sweeper.setMotor(0.8);
             }
             if (timer.tRange(5000)) {
                 return true;
