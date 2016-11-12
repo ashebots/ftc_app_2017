@@ -7,13 +7,13 @@ import org.ashebots.ftcandroidlib.complexOps.*;
 /**
  * Created by apple on 9/17/16.
  */
-@Autonomous(name="Auto Test", group ="Test")
-public class AutoTest extends AdvOpMode {
+@Autonomous(name="Button Test", group ="Test")
+public class ButtonTest extends AdvOpMode {
     ModularAuto a;
     IMUChassis c;
     @Override
     public void init() {
-        double[][] sequence = {ModularAuto.CENTER_START,ModularAuto.CLOSE_PARK,ModularAuto.RAMP_PARK};
+        double[][] sequence = {ModularAuto.LEFT_START,ModularAuto.FAR_THROW,ModularAuto.FAR_BEACON,ModularAuto.CLOSE_BEACON,ModularAuto.FAR_PARK};
         Scaler s = new Scaler();
         s.setTicksPer(700);
         c = imuchassis("Left","Right","IMU");

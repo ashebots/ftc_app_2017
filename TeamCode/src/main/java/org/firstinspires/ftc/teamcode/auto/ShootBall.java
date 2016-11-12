@@ -9,6 +9,8 @@ public class ShootBall extends AutoRoutine {
     AdvMotor accelerator;
     Timer timer = new Timer();
     double angle;
+    double oldEnc = 0;
+    int shootcount = 0;
     public ShootBall(IMUChassis chassis, AdvMotor sweeper, AdvMotor accelerator, double angle) {
         this.chassis = chassis;
         this.sweeper = sweeper;
@@ -16,7 +18,7 @@ public class ShootBall extends AutoRoutine {
         this.angle = angle;
     }
     @Override
-    public boolean states(int step) {
+    public boolean states(int step) { //aim
         if (step==0) {
             double difference = chassis.angle() - angle; //difference between the angles
             double spd = 0.5;
@@ -30,13 +32,30 @@ public class ShootBall extends AutoRoutine {
             }
             state.state((Math.abs(difference)<2.5), 1);
         }
-        if (step==1) {
-            accelerator.setMotor(1);
-            if (timer.tRange(1500)) {
-                sweeper.setMotor(0.8);
+        if (step==1) { //wait until motor is fully sped up
+            int reqSpeed = 15000;
+            double encoder = accelerator.getEnc(); //position
+            double change = encoder - oldEnc; //speed
+            state.state(change>reqSpeed && change<reqSpeed*1.1/100,2);
+            oldEnc = encoder;
+            if (change<reqSpeed*1.1/100) {
+                accelerator.setMotor(1);
+            } else {
+                accelerator.setMotor(0.5); //stops if it's too fast, to re speed up
             }
-            if (timer.tRange(5000)) {
-                return true;
+            if (shootcount>=2) return true; //how many balls have been shot
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        if (step==2) { //shoot
+            accelerator.setMotor(1);
+            sweeper.setMotor(1);
+            if (timer.tRange(1000)) {
+                shootcount++;
+                state.state(true,1);
             }
         }
         return false;

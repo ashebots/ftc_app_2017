@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.finished.drive_only;
+package org.firstinspires.ftc.teamcode.auto.finished;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.auto.*;
@@ -16,7 +16,7 @@ public class BlueR_Ramp extends AdvOpMode {
         double[][] sequence = {ModularAuto.LEFT_START,ModularAuto.FAR_THROW,ModularAuto.RAMP_PARK};
         Scaler s = new Scaler();
         s.setTicksPer(700);
-        a = new ModularAuto(sequence, true, imuchassis("Left","Right","IMU"),s,null,null);
+        a = new ModularAuto(sequence, true, imuchassis("Left","Right","IMU"),s,mtr("Accelerator"),mtr("Sweeper"));
     }
 
     @Override

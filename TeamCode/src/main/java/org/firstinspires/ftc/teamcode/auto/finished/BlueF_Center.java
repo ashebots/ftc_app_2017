@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.finished.drive_only;
+package org.firstinspires.ftc.teamcode.auto.finished;
 import org.firstinspires.ftc.teamcode.auto.*;
 import org.ashebots.ftcandroidlib.complexOps.*;
 
@@ -14,7 +14,7 @@ public class BlueF_Center extends AdvOpMode {
         double[][] sequence = {ModularAuto.RIGHT_START,ModularAuto.CLOSE_THROW,ModularAuto.CLOSE_PARK};
         Scaler s = new Scaler();
         s.setTicksPer(700);
-        a = new ModularAuto(sequence, true, imuchassis("Left","Right","IMU"),s,null,null);
+        a = new ModularAuto(sequence, true, imuchassis("Left","Right","IMU"),s,mtr("Accelerator"),mtr("Sweeper"));
     }
 
     @Override
