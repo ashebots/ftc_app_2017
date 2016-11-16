@@ -45,11 +45,20 @@ public class VueforiaTestOpMode extends OpMode {
 
     public void loop(){
         for (VuforiaTrackable beac : beacons){
-            OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) beacons.get(1).getListener()).getPose();
+            OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) beac.getListener()).getPose();
             if(pose !=null){
                 VectorF translation = pose.getTranslation();
                 telemetry.addData("Distance Away",-translation.get(2));
                 telemetry.addData("Distance Side-to-Side",-translation.get(0));
+
+                double xBasisX = pose.get(0,0);
+                double angle = Math.toDegrees(Math.asin(xBasisX));
+
+                telemetry.addData("Rotation", angle);
+            }
+            else
+            {
+                telemetry.addData(beac.getName(), "Null");
             }
         }
     telemetry.update();

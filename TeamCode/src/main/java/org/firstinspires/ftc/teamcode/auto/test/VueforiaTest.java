@@ -51,9 +51,10 @@ public class VueforiaTest extends LinearOpMode {
 
                     telemetry.addData(beac.getName() + "-Translation", translation);
 
-                    double degreesToTurn = Math.toDegrees(Math.atan2(translation.get(1),translation.get(2)));
+                    double xBasisX = pose.get(0,0);
+                    double angle = Math.toDegrees(Math.asin(xBasisX));
 
-                    telemetry.addData(beac.getName() + "-Degrees", degreesToTurn);
+                    telemetry.addData(beac.getName() + "-Rotation", angle);
                 }
             }
         telemetry.update();
