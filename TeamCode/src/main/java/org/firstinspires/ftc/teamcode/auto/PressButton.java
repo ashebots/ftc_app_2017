@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.R;
 
 public class PressButton extends AutoRoutine {
-    ChassisMechanum chassis;
+    Chassis chassis;
     Servo servo;
     VuforiaImaging vuforia = new VuforiaImaging();
 
@@ -23,7 +23,7 @@ public class PressButton extends AutoRoutine {
 
     int target;
 
-    public PressButton(ChassisMechanum c, Scaler s, Servo srv, int t) {
+    public PressButton(Chassis c, Scaler s, Servo srv, int t) {
         vuforia.startup();
         chassis = c;
         foot = s;
