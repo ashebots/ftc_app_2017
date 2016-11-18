@@ -6,7 +6,7 @@ import org.ashebots.ftcandroidlib.complexOps.*;
 @TeleOp(name="IMU Test", group ="TeleOp")
 @Disabled
 public class Test extends AdvOpMode {
-    IMUChassis chassis;
+    Chassis chassis;
 
     JoyEvent n = new JoyEvent(0.3,0.4,1.0);
     @Override

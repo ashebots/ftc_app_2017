@@ -10,7 +10,7 @@ import org.ashebots.ftcandroidlib.complexOps.*;
 @Autonomous(name="Auto Ball Test", group ="Test")
 public class AutoBallThrow extends AdvOpMode {
     ModularAuto a;
-    IMUChassis c;
+    Chassis c;
     @Override
     public void init() {
         double[][] sequence = {ModularAuto.CENTER_START,ModularAuto.CLOSE_THROW,ModularAuto.CLOSE_PARK};

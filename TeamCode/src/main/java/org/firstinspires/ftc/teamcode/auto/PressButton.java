@@ -15,32 +15,47 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.R;
 
 public class PressButton extends AutoRoutine {
-    IMUChassis chassis;
+    ChassisMechanum chassis;
     Servo servo;
     VuforiaImaging vuforia = new VuforiaImaging();
 
     Scaler foot;
 
-    int button = 0;
-    Vector moveToLoc;
+    int target;
 
-    public static final String VUFORIA_KEY = "";
-
-    public PressButton(IMUChassis c, Scaler s, Servo srv, int t) {
+    public PressButton(ChassisMechanum c, Scaler s, Servo srv, int t) {
         vuforia.startup();
         chassis = c;
         foot = s;
         servo = srv;
+        target = t;
     }
     @Override
     public boolean states(int step) {
         //Calculate distances and angles
-        double distanceAway = vuforia.picDistance();
-        double distanceToSide = vuforia.picSide();
-        double angleFromPicture = vuforia.picAngle();
+        double distanceAway = vuforia.picDistance(target);
+        double distanceToSide = vuforia.picSide(target);
+        double angleFromPicture = vuforia.picAngle(target);
         //State Machine
         switch (step) {
-
+            case (0): //turn to approx angle (IMU)
+                break;
+            case (1): //turn to precise angle (VUF)
+                break;
+            case (2): //move to center line
+                break;
+            case (3): //scan
+                break;
+            case (4): //move left
+                break;
+            case (5): //move right
+                break;
+            case (6): //press button
+                break;
+            case (7): //move back
+                break;
+            case (8): //recenter
+                break;
         }
         return false;
     }

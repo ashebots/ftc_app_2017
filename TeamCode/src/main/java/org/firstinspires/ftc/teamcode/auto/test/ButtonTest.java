@@ -10,7 +10,7 @@ import org.ashebots.ftcandroidlib.complexOps.*;
 @Autonomous(name="Button Test", group ="Test")
 public class ButtonTest extends AdvOpMode {
     ModularAuto a;
-    IMUChassis c;
+    Chassis c;
     @Override
     public void init() {
         double[][] sequence = {ModularAuto.LEFT_START,ModularAuto.FAR_THROW,ModularAuto.FAR_BEACON,ModularAuto.CLOSE_BEACON,ModularAuto.FAR_PARK};

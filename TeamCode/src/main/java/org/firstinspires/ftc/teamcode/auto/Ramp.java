@@ -5,9 +5,9 @@ import org.ashebots.ftcandroidlib.complexOps.*;
  * Created by apple on 9/15/16.
  */
 public class Ramp extends AutoRoutine {
-    IMUChassis chassis;
+    Chassis chassis;
 
-    public Ramp(IMUChassis c) {
+    public Ramp(Chassis c) {
         chassis = c;
     }
 

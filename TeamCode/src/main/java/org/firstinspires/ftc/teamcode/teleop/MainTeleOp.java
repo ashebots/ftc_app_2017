@@ -58,6 +58,10 @@ public class MainTeleOp extends AdvOpMode {
                 mVals[0] *= 0.1;
                 mVals[1] *= 0.1;
             }
+            if (frtTog) {
+                mVals[0] *= -1;
+                mVals[1] *= -1;
+            }
             chassis.mechanumDrive(mVals[0],mVals[1]);
         } else { //Normal Joystick
             double[] mVals = n.calc(gamepad1.left_stick_x, gamepad1.left_stick_y);

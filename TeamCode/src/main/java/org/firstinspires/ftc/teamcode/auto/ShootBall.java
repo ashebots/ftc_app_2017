@@ -4,14 +4,14 @@ import com.qualcomm.robotcore.hardware.*;
 import org.ashebots.ftcandroidlib.complexOps.*;
 
 public class ShootBall extends AutoRoutine {
-    IMUChassis chassis;
+    Chassis chassis;
     AdvMotor sweeper;
     AdvMotor accelerator;
     Timer timer = new Timer();
     double angle;
     double oldEnc = 0;
     int shootcount = 0;
-    public ShootBall(IMUChassis chassis, AdvMotor sweeper, AdvMotor accelerator, double angle) {
+    public ShootBall(Chassis chassis, AdvMotor sweeper, AdvMotor accelerator, double angle) {
         this.chassis = chassis;
         this.sweeper = sweeper;
         this.accelerator = accelerator;

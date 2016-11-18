@@ -8,7 +8,7 @@ import org.ashebots.ftcandroidlib.complexOps.*;
  */
 public class ModularAuto extends AutoRoutine {
     double[][] pos;
-    IMUChassis chassis;
+    Chassis chassis;
     Scaler foot;
     public Vector next;
     AutoRoutine special;
@@ -35,7 +35,7 @@ public class ModularAuto extends AutoRoutine {
     int wait = 0;
     Timer timer = new Timer();
 
-    public ModularAuto(double[][] position, boolean blue, IMUChassis c, Scaler s, AdvMotor accelerator, AdvMotor sweeper) {
+    public ModularAuto(double[][] position, boolean blue, Chassis c, Scaler s, AdvMotor accelerator, AdvMotor sweeper) {
         this.blue = blue;
         //puts these values in the program
         pos = position;
@@ -47,7 +47,7 @@ public class ModularAuto extends AutoRoutine {
         between();
     }
 
-    public ModularAuto(double[][] position, boolean blue, IMUChassis c, Scaler s, AdvMotor accelerator, AdvMotor sweeper, int time) {
+    public ModularAuto(double[][] position, boolean blue, Chassis c, Scaler s, AdvMotor accelerator, AdvMotor sweeper, int time) {
         this.blue = blue;
         //puts these values in the program
         pos = position;
@@ -80,10 +80,10 @@ public class ModularAuto extends AutoRoutine {
             special = new Ramp(chassis);
         }
         else if (pos[s+1]==ModularAuto.CLOSE_BEACON) {
-            special = new PressButton(chassis, foot, servo, 0);
+            special = new PressButton(null, foot, servo, 0); //replace with chassis
         }
         else if (pos[s+1]==ModularAuto.FAR_BEACON) {
-            special = new PressButton(chassis, foot, servo, 0);
+            special = new PressButton(null, foot, servo, 0); //replace with chassis
         }
         else if (pos[s+1]==ModularAuto.CLOSE_THROW) {
             special = new ShootBall(chassis, sweeper, accelerator, -15*reversal);

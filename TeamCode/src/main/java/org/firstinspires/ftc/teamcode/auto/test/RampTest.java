@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.ashebots.ftcandroidlib.complexOps.AdvOpMode;
-import org.ashebots.ftcandroidlib.complexOps.IMUChassis;
+import org.ashebots.ftcandroidlib.complexOps.Chassis;
 import org.firstinspires.ftc.teamcode.auto.Ramp;
 
 
@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.auto.Ramp;
 public class RampTest extends AdvOpMode
 {
     Ramp ramp;
-    IMUChassis chassis;
+    Chassis chassis;
 
     @Override
     public void init () {
