@@ -18,10 +18,10 @@ public class Vector extends AutoRoutine {
         coords[2] = x2;
         coords[3] = y2;
         chassis = c;
-            x2 -= x1;      //pythag theorem
-            y2 -= y1;
-            x2 = s.s(x2);
-            y2 = s.s(y2);
+        x2 -= x1;
+        y2 -= y1;
+        x2 = s.s(x2);
+        y2 = s.s(y2);
         distance = Math.sqrt(x2*x2 + y2*y2);
         angle = Math.asin(x2/distance); //still Pythag
 

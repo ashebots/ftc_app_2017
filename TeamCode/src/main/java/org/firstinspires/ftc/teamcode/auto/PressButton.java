@@ -23,11 +23,10 @@ public class PressButton extends AutoRoutine {
 
     int target;
 
-    public PressButton(Chassis c, Scaler s, Servo srv, int t) {
+    public PressButton(Chassis c, Scaler s, int t) {
         vuforia.startup();
         chassis = c;
         foot = s;
-        servo = srv;
         target = t;
     }
     @Override
@@ -39,10 +38,33 @@ public class PressButton extends AutoRoutine {
         //State Machine
         switch (step) {
             case (0): //turn to approx angle (IMU)
+                double angle = 0;
+                if (target > 1) angle = 180;
+                angle = chassis.r(angle - chassis.angle()); //angle difference
+                double spd = 0.375;
+                if (angle<0) {
+                    chassis.turnMotors(0.375);
+                } else {
+                    chassis.turnMotors(-0.375);
+                }
+                state.state(Math.abs(angle)<5,1);
                 break;
             case (1): //turn to precise angle (VUF)
+                angle = 0;
+                if (target < 2) angle = 180;
+                angle = chassis.r(angle - angleFromPicture); //angle difference
+                if (angle<0) {
+                    chassis.turnMotors(0.05);
+                } else {
+                    chassis.turnMotors(-0.05);
+                }
+                state.state(Math.abs(angle)<1,2);
                 break;
             case (2): //move to center line
+                if (distanceToSide<0) {
+                    chassis.setMotors(0.1);
+                } else chassis.setMotors(-0.1);
+                state.state(Math.abs(distanceToSide)<5,3);
                 break;
             case (3): //scan
                 break;
@@ -50,7 +72,7 @@ public class PressButton extends AutoRoutine {
                 break;
             case (5): //move right
                 break;
-            case (6): //press button
+            case (6): //press button //REQUIRES MECHANUM
                 break;
             case (7): //move back
                 break;
@@ -66,5 +88,6 @@ public class PressButton extends AutoRoutine {
     @Override
     public void between() {
         chassis.resetEncs();
+        chassis.stop();
     }
 }

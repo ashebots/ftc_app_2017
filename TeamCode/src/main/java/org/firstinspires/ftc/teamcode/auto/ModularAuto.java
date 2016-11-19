@@ -12,7 +12,6 @@ public class ModularAuto extends AutoRoutine {
     Scaler foot;
     public Vector next;
     AutoRoutine special;
-    Servo servo;
     public AdvMotor sweeper;
     public AdvMotor accelerator;
     boolean blue = false;
@@ -22,8 +21,8 @@ public class ModularAuto extends AutoRoutine {
     static public double[] RAMP_PARK = {1.5, 1.5}; //gets onto the ramp fully
     static public double[] CLOSE_PARK = {6,5.25};
     static public double[] FAR_PARK = {5.25,6};
-    static public double[] CLOSE_BEACON = {3,5};
-    static public double[] FAR_BEACON = {3,9};
+    static public double[] CLOSE_BEACON = {1.5,5};
+    static public double[] FAR_BEACON = {1.5,9};
     static public double[] CLOSE_HUB = {6,3.5};
     static public double[] FAR_HUB = {4,3.5};
     static public double[] CLOSE_THROW = {6,2.5};
@@ -80,10 +79,10 @@ public class ModularAuto extends AutoRoutine {
             special = new Ramp(chassis);
         }
         else if (pos[s+1]==ModularAuto.CLOSE_BEACON) {
-            special = new PressButton(null, foot, servo, 0); //replace with chassis
+            special = new PressButton(chassis, foot, 0); //replace with chassis
         }
         else if (pos[s+1]==ModularAuto.FAR_BEACON) {
-            special = new PressButton(null, foot, servo, 0); //replace with chassis
+            special = new PressButton(chassis, foot, 0); //replace with chassis
         }
         else if (pos[s+1]==ModularAuto.CLOSE_THROW) {
             special = new ShootBall(chassis, sweeper, accelerator, -15*reversal);
