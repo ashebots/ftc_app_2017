@@ -26,7 +26,7 @@ public class VuforiaImaging {
 
 
         beacons = vuforia.loadTrackablesFromAsset("FTC_2016-17");
-
+        //Wheels, Tools, Lego, Gears
         beacons.activate();
     }
     public double picDistance(int pic) {
@@ -41,7 +41,7 @@ public class VuforiaImaging {
     }
     public double picAngle(int pic) {
         OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) beacons.get(pic).getListener()).getPose();
-        if (pose==null) return 0;
+        if (pose==null) return 180;
         return Math.toDegrees(Math.asin(pose.get(0,0)));
     }
 }
