@@ -28,18 +28,22 @@ public class VuforiaImaging {
         //Wheels, Tools, Lego, Gears
         beacons.activate();
     }
+    //Target distance from camera in centimeters
     public double picDistance(int pic) {
         OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) beacons.get(pic).getListener()).getPose();
         if (pose==null) return 0;
         return pose.getTranslation().get(2);
     }
+    //finds left/right distance relative to camera of target, right is positive. In centimeters
     public double picSide(int pic) {
         OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) beacons.get(pic).getListener()).getPose();
         if (pose==null) return 0;
         return pose.getTranslation().get(0);
     }
+    //Find angle to target. In degrees
     public double picAngle(int pic) {
         OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) beacons.get(pic).getListener()).getPose();
+        //If no target found return 180
         if (pose==null) return 180;
         return Math.toDegrees(Math.asin(pose.get(0,0)));
     }

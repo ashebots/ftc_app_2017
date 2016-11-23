@@ -3,6 +3,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.ashebots.ftcandroidlib.complexOps.*;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -38,8 +39,11 @@ public class PressButton extends AutoRoutine {
         //State Machine
         switch (step) {
             case (0): //turn to approx angle (IMU)
+                AddTelemertyData("State", "IMU turn");
                 double angle = 0;
-                if (target > 1) angle = 180;
+                if (target > 1){
+                    angle = 180;
+                }
                 angle = chassis.r(angle - chassis.angle()); //angle difference
                 double spd = 0.375;
                 if (angle<0) {
@@ -48,10 +52,14 @@ public class PressButton extends AutoRoutine {
                     chassis.turnMotors(-0.375);
                 }
                 state.state(Math.abs(angle)<5,1);
+
                 break;
             case (1): //turn to precise angle (VUF)
+                AddTelemertyData("State", "VUF turn");
                 angle = 0;
-                if (target < 2) angle = 180;
+                if (target < 2){
+                    angle = 180;
+                }
                 angle = chassis.r(angle - angleFromPicture); //angle difference
                 if (angle<0) {
                     chassis.turnMotors(0.05);
@@ -59,8 +67,10 @@ public class PressButton extends AutoRoutine {
                     chassis.turnMotors(-0.05);
                 }
                 state.state(Math.abs(angle)<1,2);
+
                 break;
             case (2): //move to center line
+                AddTelemertyData("State", "Align with targets");
                 if (distanceToSide<0) {
                     chassis.setMotors(0.1);
                 } else chassis.setMotors(-0.1);
