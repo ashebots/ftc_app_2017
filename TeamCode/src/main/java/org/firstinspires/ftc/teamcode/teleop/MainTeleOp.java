@@ -10,9 +10,8 @@ public class MainTeleOp extends AdvOpMode {
     //Define hardware
     AdvMotor lift;
     ChassisMechanum chassis;
-    JoyEvent s = new JoyEvent(0.1,0.15,1.0);
-    JoyEvent n = new JoyEvent(0.4,0.45,1.0);
-    JoyEvent f = new JoyEvent(1.0,1.0,1.0);
+    JoyEvent drive = new JoyEvent(1.0,1.0,1.0);
+    JoyEvent mechanum = new JoyEvent(1.0,1.0,1.0);
 
     AdvMotor sweeper;
     AdvMotor accelerator;
@@ -36,48 +35,54 @@ public class MainTeleOp extends AdvOpMode {
     @Override
     public void loop() {
         //Speed Mode
-        if (xButton.parse(gamepad1.x).equals("PRESSED")) {
+        if (xButton.parse(gamepad1.x).equals("PRESSED")) { //fast
             if (speedMode == 1) {
                 speedMode = 0;
             } else speedMode = 1;
         }
-        if (aButton.parse(gamepad1.a).equals("PRESSED")) {
+        if (aButton.parse(gamepad1.a).equals("PRESSED")) { //slow
             if (speedMode == 2) {
                 speedMode = 0;
             } else speedMode = 2;
         }
+        //Reverse Mode
+        frtTog = (frtTog ^ bButton.parse(gamepad1.b).equals("PRESSED"));
 
-        //Run Motors
-        if (gamepad1.right_stick_x != 0 || gamepad1.right_stick_y != 0) { //Mechanum Joystick
-            double[] mVals = {gamepad1.right_stick_x,gamepad1.right_stick_y};
-            if (speedMode == 0) { //normal mode
-                mVals[0] *= 0.4;
-                mVals[1] *= 0.4;
+        boolean driveMode = drive.parse(gamepad1.left_stick_x,gamepad1.left_stick_y)=="HELD";
+        boolean mechnMode = mechanum.parse(gamepad1.right_stick_x,gamepad1.right_stick_y)=="HELD";
+        if (driveMode && mechnMode) { //Strafe Mode
+            double modifier = 0.35;
+            if (speedMode == 2) modifier = 0.05; //slow mode
+            if (speedMode == 1) modifier = 1; //fast mode
+            double[] motors = drive.calc(modifier*gamepad1.left_stick_x,modifier*gamepad1.left_stick_y);
+            if (frtTog) modifier *= -1;
+            double[] mechnm = mechanum.calc(modifier*gamepad1.right_stick_x,modifier*gamepad1.right_stick_y);
+            if (frtTog) { //reverse by switching motor values
+                double placeholder = motors[0];
+                motors[0] = -motors[1];
+                motors[1] = -placeholder;
             }
-            if (speedMode == 2) { //slow mode
-                mVals[0] *= 0.1;
-                mVals[1] *= 0.1;
+            chassis.motorLeft.setPower((mechnm[0]+motors[0])/2);
+            chassis.motorRight.setPower((mechnm[1]+motors[1])/2);
+            chassis.motorLeftB.setPower((mechnm[0]+motors[1])/2);
+            chassis.motorRightB.setPower((mechnm[1]+motors[0])/2);
+        } else if (driveMode) { //Drive Mode
+            double modifier = 0.35;
+            if (speedMode == 2) modifier = 0.05; //slow mode
+            if (speedMode == 1) modifier = 1; //fast mode
+            double[] motors = drive.calc(modifier*gamepad1.left_stick_x,modifier*gamepad1.left_stick_y);
+            if (frtTog) { //reverse by switching motor values
+                double placeholder = motors[0];
+                motors[0] = -motors[1];
+                motors[1] = -placeholder;
             }
-            if (frtTog) {
-                mVals[0] *= -1;
-                mVals[1] *= -1;
-            }
-            chassis.omniDrive(mVals[0],mVals[1]);
-        } else { //Normal Joystick
-            double[] mVals = n.calc(gamepad1.left_stick_x, gamepad1.left_stick_y);
-            if (speedMode == 1) { //fast mode
-                mVals = f.calc(gamepad1.left_stick_x, gamepad1.left_stick_y);
-            }
-            if (speedMode == 2) { //slow mode
-                mVals = s.calc(gamepad1.left_stick_x, gamepad1.left_stick_y);
-            }
-            frtTog = (frtTog ^ bButton.parse(gamepad1.b).equals("PRESSED"));
-            if (frtTog) {
-                double placeholder = mVals[0];
-                mVals[0] = -mVals[1];
-                mVals[1] = -placeholder;
-            }
-            chassis.moveMotors(mVals[0], mVals[1]);
+            chassis.moveMotors(motors[0],motors[1]);
+        } else { //Mechanum Mode
+            double modifier = 0.35;
+            if (speedMode == 2) modifier = 0.05; //slow mode
+            if (speedMode == 1) modifier = 1; //fast mode
+            if (frtTog) modifier *= -1;
+            chassis.omniDrive(modifier*gamepad1.right_stick_x,modifier*gamepad1.right_stick_y);
         }
 
         //Toggle accelerator
