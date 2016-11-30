@@ -77,16 +77,31 @@ public class PressButton extends AutoRoutine {
                 state.state(Math.abs(distanceToSide)<5,3);
                 break;
             case (3): //scan
+
                 break;
             case (4): //move left
+                chassis.setMotors(0.1);
+                state.state(distanceToSide<-76,6);
                 break;
             case (5): //move right
+                chassis.setMotors(-0.1);
+                state.state(distanceToSide>76,6);
                 break;
-            case (6): //press button //REQUIRES MECHANUM
+            case (6): //press button
+                chassis.omniDrive(0.1,0);
+                state.state(distanceAway<80,7);
                 break;
             case (7): //move back
+                chassis.omniDrive(-0.1,0);
+                state.state(distanceAway>300,8);
                 break;
             case (8): //recenter
+                if (distanceToSide<0) {
+                    chassis.setMotors(-0.1);
+                } else {
+                    chassis.setMotors(0.1);
+                }
+                if (Math.abs(distanceToSide)<5) return true;
                 break;
         }
         return false;

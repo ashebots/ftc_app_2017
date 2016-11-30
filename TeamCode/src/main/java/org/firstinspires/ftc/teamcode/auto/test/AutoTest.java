@@ -28,8 +28,6 @@ public class AutoTest extends AdvOpMode {
         telemetry.addData("Roll", c.roll());
         telemetry.addData("Left", c.motorLeft.getCurrentPosition()-c.loff);
         telemetry.addData("Right", c.motorRight.getCurrentPosition()-c.roff);
-        telemetry.addData("Angle Target", a.next.angle);
-        telemetry.addData("Angle Difference", a.next.target);
         double[] coords = a.next.coords;
         telemetry.addData("First Coordinate",coords[0]+", "+coords[1]);
         telemetry.addData("Second Coordinate",coords[2]+", "+coords[3]);
