@@ -8,9 +8,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath ('com.android.tools.build:gradle:2.2.2') {
-            force = true
-        }
+        classpath 'com.android.tools.build:gradle:2.1.3'
     }
 }
 
