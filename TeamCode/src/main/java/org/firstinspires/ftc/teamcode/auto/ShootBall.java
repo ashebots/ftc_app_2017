@@ -33,10 +33,10 @@ public class ShootBall extends AutoRoutine {
             state.state((Math.abs(difference)<2.5), 1);
         }
         if (step==1) { //wait until motor is fully sped up
-            int reqSpeed = 15000;
+            int reqSpeed = 0;
             double encoder = accelerator.getEnc(); //position
             double change = encoder - oldEnc; //speed
-            state.state(change>reqSpeed && change<reqSpeed*1.1/100,2);
+            state.state(change>reqSpeed/100,2);
             oldEnc = encoder;
             if (change<reqSpeed*1.1/100) {
                 accelerator.setMotor(1);
