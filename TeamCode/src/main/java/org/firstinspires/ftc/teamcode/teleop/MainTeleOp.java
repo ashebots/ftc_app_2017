@@ -23,7 +23,7 @@ public class MainTeleOp extends AdvOpMode {
 
     boolean accTog;
     boolean frtTog;
-    int speedMode;
+    int speedMode = 1;
     @Override
     public void init() {
         lift = mtr("Lift");
@@ -54,7 +54,7 @@ public class MainTeleOp extends AdvOpMode {
             double modifier = 0.35;
             if (speedMode == 2) modifier = 0.05; //slow mode
             if (speedMode == 1) modifier = 1; //fast mode
-            double[] motors = drive.calc(modifier*gamepad1.left_stick_x,modifier*gamepad1.left_stick_y);
+            double[] motors = drive.calc(-modifier*gamepad1.left_stick_x,modifier*gamepad1.left_stick_y);
             if (frtTog) modifier *= -1;
             double[] mechnm = mechanum.calc(modifier*gamepad1.right_stick_x,modifier*gamepad1.right_stick_y);
             if (frtTog) { //reverse by switching motor values

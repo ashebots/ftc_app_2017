@@ -2,18 +2,6 @@ package org.firstinspires.ftc.teamcode.auto;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.ashebots.ftcandroidlib.complexOps.*;
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.teamcode.R;
 
 public class PressButton extends AutoRoutine {
     Chassis chassis;
@@ -25,7 +13,8 @@ public class PressButton extends AutoRoutine {
     int target;
 
     public PressButton(Chassis c, Scaler s, int t) {
-        vuforia.startup();
+        vuforia.init();
+        vuforia.start();
         chassis = c;
         foot = s;
         target = t;
