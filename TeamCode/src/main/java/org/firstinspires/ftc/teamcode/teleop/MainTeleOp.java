@@ -22,7 +22,7 @@ public class MainTeleOp extends AdvOpMode {
     BoolEvent yButton = new BoolEvent();
 
     boolean accTog;
-    boolean frtTog;
+    boolean frtTog = true;
     int speedMode = 1;
     @Override
     public void init() {
@@ -30,6 +30,11 @@ public class MainTeleOp extends AdvOpMode {
         chassis = chassismechanum("Left", "Right", "LeftBack", "RightBack");
         sweeper = mtr("Sweeper");
         accelerator = mtr("Accelerator");
+    }
+
+    @Override
+    public void start() {
+        speedMode = 1;
     }
 
     @Override
