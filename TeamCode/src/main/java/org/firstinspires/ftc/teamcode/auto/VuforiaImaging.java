@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.auto;
 
+import android.graphics.Bitmap;
+
 import com.vuforia.*;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -18,7 +20,7 @@ public class VuforiaImaging {
     VuforiaTrackables beacons;
     VuforiaLocalizer locale;
     public void init() {
-        VuforiaLocalizer.Parameters parans = new VuforiaLocalizer.Parameters();
+        VuforiaLocalizer.Parameters parans = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
         parans.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         parans.vuforiaLicenseKey = "Adz4uVb/////AAAAGTTgOpGudEXPhq0rfEmXQQlV8jmI3grQmsKFdm3b/TmyXQrrNFBUP/axQdDclnPwypGWbahlLCoFTKj6LSaWv+ZWx8Gju+Nsg/Tpe7ohKJ9vhiVbUiSYkrZWSWMCpUitwZCSH8h8bzuBePNmjmq1Cy8VLs/K7CCRJNZHLp4ruYM5QqXhYeBZ0vbb2QScEHAqOZ2qumf6BCixcTrXDZD6mPVVhc06k9A28AblyCsaE8McRP1DwXH0YiID7pCwJ8/iHr1eJyh3WqIo7eQt6gus0Q+BxUgjScBpBkfq0SXU2H1pfcwBXn27tTp9GFoEDxNw8GZUQNwF31riJQmLHdvLt9hRSLosBHNkKqqeiCuzydXm";
         locale = ClassFactory.createVuforiaLocalizer(parans);
@@ -55,7 +57,7 @@ public class VuforiaImaging {
         }
         return angle;
     }
-    Image image;
+    Image image = null;
     public Image getImage() {
         Frame frame = null;
         try {
@@ -72,5 +74,36 @@ public class VuforiaImaging {
             }
         }
         return image;
+    }
+
+    int pixelSkip = 10;
+    public boolean getColorSide(Image i) {
+        Bitmap bm = Bitmap.createBitmap(1280,720,Bitmap.Config.RGB_565);
+        bm.copyPixelsFromBuffer(i.getPixels());
+        int leftBlue = 0;
+        for (int x = 0; x < 360; x+=pixelSkip) {
+            for (int y = 0; y < 1280; y+=pixelSkip) {
+                int pixel = bm.getPixel(y, x);
+                if (blueness(pixel) > 10) {
+                    leftBlue++;
+                }
+            }
+        }
+        int rightBlue = 0;
+        for (int x = 360; x < 720; x+=pixelSkip) {
+            for (int y = 0; y < 1280; y+=pixelSkip) {
+                int pixel = bm.getPixel(y, x);
+                if (blueness(pixel) > 10) {
+                    rightBlue++;
+                }
+            }
+        }
+        return leftBlue > rightBlue;
+    }
+
+    public int blueness(int pixel) {
+        int blue = pixel & 31;
+        int red = (pixel >> 11) & 31;
+        return blue - red;
     }
 }

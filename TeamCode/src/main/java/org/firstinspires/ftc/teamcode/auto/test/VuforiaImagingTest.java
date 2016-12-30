@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode.auto.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.vuforia.Image;
 
 import org.ashebots.ftcandroidlib.complexOps.AdvOpMode;
+import org.ashebots.ftcandroidlib.complexOps.BoolEvent;
 import org.firstinspires.ftc.teamcode.auto.VuforiaImaging;
 
 /**
@@ -16,6 +18,7 @@ public class VuforiaImagingTest extends AdvOpMode {
         msStuckDetectInit = 10000;
     }
     VuforiaImaging vuforia;
+    BoolEvent a = new BoolEvent();
     @Override
     public void init(){
         vuforia = new VuforiaImaging();
@@ -25,13 +28,17 @@ public class VuforiaImagingTest extends AdvOpMode {
         vuforia.start();
     }
 
-    public void loop(){
-        tick++;
+    boolean side = false;
+    public void loop() {
+        if (a.parse(gamepad1.a).equals("PRESSED")) {
+            Image i = vuforia.getImage();
+            tick++;
+            side = vuforia.getColorSide(i);
+        }
         telemetry.addLine("Tick: "+tick);
         telemetry.addLine("Distance: "+vuforia.picDistance(0));
         telemetry.addLine("Side Distance: "+vuforia.picSide(0));
         telemetry.addLine("Angle: "+vuforia.picAngle(0));
-        telemetry.addLine("Image: "+vuforia.getImage());
-        //telemetry.update();
+        telemetry.addLine("Is Blue on Left:"+side);
     }
 }
