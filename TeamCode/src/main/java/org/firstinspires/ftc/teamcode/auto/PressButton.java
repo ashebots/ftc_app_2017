@@ -32,9 +32,9 @@ public class PressButton extends AutoRoutine {
         switch (step) {
             case (0): //turn to approx angle (IMU)
                 AddTelemertyData("State", "IMU turn");
-                double angle = 0;
+                double angle = 90;
                 if (target > 1){
-                    angle = 180; //if on blue rotate 180 degrees
+                    angle = -90; //if on blue rotate 180 degrees
                 }
                 angle = chassis.r(angle - chassis.angle()); //angle difference
                 double spd = 0.375;
@@ -48,9 +48,9 @@ public class PressButton extends AutoRoutine {
                 break;
             case (1): //turn to precise angle (VUF)
                 AddTelemertyData("State", "VUF turn");
-                angle = 0;
+                angle = 90;
                 if (target > 1){
-                    angle = 180; //if on blue rotate 180 degrees
+                    angle = -90; //if on blue rotate 180 degrees
                 }
                 angle = chassis.r(angle - angleFromPicture); //angle difference
                 if (angle<0) { //which angle to turn
@@ -77,19 +77,19 @@ public class PressButton extends AutoRoutine {
                 }
                 break;
             case (4): //move left
-                chassis.setMotors(0.1);
+                chassis.omniDrive(0.1,0);
                 state.state(distanceToSide<-76,6);
                 break;
             case (5): //move right
-                chassis.setMotors(-0.1);
+                chassis.omniDrive(-0.1,0);
                 state.state(distanceToSide>76,6);
                 break;
             case (6): //press button
-                chassis.omniDrive(0.1,0);
+                chassis.setMotors(0.1);
                 state.state(distanceAway<80,7);
                 break;
             case (7): //move back
-                chassis.omniDrive(-0.1,0);
+                chassis.setMotors(-0.1);
                 state.state(distanceAway>300,8);
                 break;
             case (8): //recenter
