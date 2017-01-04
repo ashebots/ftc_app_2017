@@ -26,7 +26,7 @@ public class ShootBall extends AutoRoutine {
             if (Math.abs(difference)<25) {
                 spd = Math.abs(difference)/50;
             }
-            if (difference > 0){
+            if (difference > 0){ //move the correct direction
                 chassis.turnMotors(spd);
             } else {
                 chassis.turnMotors(-spd);
@@ -34,32 +34,20 @@ public class ShootBall extends AutoRoutine {
             state.state((Math.abs(difference)<2.5), 1);
         }
         if (step==1) { //wait until motor is fully sped up
-            int reqSpeed = 100;
-            double encoder = accelerator.getEnc(); //position
-            double change = (encoder - oldEnc) * 100; //this is to convert it from Ticks/centisecond to Ticks/second
-            double speedDiff = change - reqSpeed;
-            double speedDiffO = oldChange - reqSpeed;
-            state.state((speedDiff>=0 && speedDiffO<=0) || (speedDiffO>=0 && speedDiff<=0),2); //if sign on speed difference changed, run
-            oldChange = change; //used to see if the speed crossed the target
-            oldEnc = encoder;
-            if (change<reqSpeed) {
-                accelerator.setMotor(1);
-            } else {
-                accelerator.setMotor(0); //stops if it's too fast, to re speed up
-            }
-            if (shootcount>=2) return true; //how many balls have been shot
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            accelerator.setMotor(1);
+            state.state(timer.tRange(2000), 2);
         }
         if (step==2) { //shoot
-            accelerator.setMotor(1);
+            sweeper.setMotor(1);
+            state.state(sweeper.aRange(1000, INF),3); //run until it has fed the first ball
+        }
+        if (step==3) { //respeed as friction just slowed it
+            state.state(timer.tRange(1000), 4);
+        }
+        if (step==4) {
             sweeper.setMotor(1);
             if (timer.tRange(1000)) {
-                shootcount++;
-                state.state(true,1);
+                return true;
             }
         }
         return false;

@@ -5,20 +5,23 @@ import org.ashebots.ftcandroidlib.complexOps.*;
 
 public class PressButton extends AutoRoutine {
     Chassis chassis;
-    Servo servo;
     VuforiaImaging vuforia = new VuforiaImaging();
 
     Scaler foot;
 
     int target;
 
-    public PressButton(Chassis c, Scaler s, int t) {
+    boolean colorEqualsBlue;
+
+    public PressButton(Chassis c, Scaler s, int t, boolean isBlue) {
         vuforia.init();
         vuforia.start();
         chassis = c;
         foot = s;
         target = t;
+        colorEqualsBlue = isBlue;
     }
+
     @Override
     public boolean states(int step) {
         //Calculate distances and angles
@@ -31,11 +34,11 @@ public class PressButton extends AutoRoutine {
                 AddTelemertyData("State", "IMU turn");
                 double angle = 0;
                 if (target > 1){
-                    angle = 180;
+                    angle = 180; //if on blue rotate 180 degrees
                 }
                 angle = chassis.r(angle - chassis.angle()); //angle difference
                 double spd = 0.375;
-                if (angle<0) {
+                if (angle<0) { //which angle to turn
                     chassis.turnMotors(0.375);
                 } else {
                     chassis.turnMotors(-0.375);
@@ -46,11 +49,11 @@ public class PressButton extends AutoRoutine {
             case (1): //turn to precise angle (VUF)
                 AddTelemertyData("State", "VUF turn");
                 angle = 0;
-                if (target < 2){
-                    angle = 180;
+                if (target > 1){
+                    angle = 180; //if on blue rotate 180 degrees
                 }
                 angle = chassis.r(angle - angleFromPicture); //angle difference
-                if (angle<0) {
+                if (angle<0) { //which angle to turn
                     chassis.turnMotors(0.05);
                 } else {
                     chassis.turnMotors(-0.05);
@@ -60,13 +63,18 @@ public class PressButton extends AutoRoutine {
                 break;
             case (2): //move to center line
                 AddTelemertyData("State", "Align with targets");
-                if (distanceToSide<0) {
+                if (distanceToSide<0) { //move onto the line (forward or back)
                     chassis.setMotors(0.1);
                 } else chassis.setMotors(-0.1);
                 state.state(Math.abs(distanceToSide)<5,3);
                 break;
             case (3): //scan
-
+                boolean isBlueOnLeft = vuforia.getColorSide(vuforia.getImage());
+                if (isBlueOnLeft ^ colorEqualsBlue) {
+                    state.state(true, 5); //one's true, one's false, therefore, our color is not on the left
+                } else {
+                    state.state(true, 4); //both are the same, therefore, our color is on the left
+                }
                 break;
             case (4): //move left
                 chassis.setMotors(0.1);
@@ -85,7 +93,7 @@ public class PressButton extends AutoRoutine {
                 state.state(distanceAway>300,8);
                 break;
             case (8): //recenter
-                if (distanceToSide<0) {
+                if (distanceToSide<0) { //pick a direction (based on which button you pressed)
                     chassis.setMotors(-0.1);
                 } else {
                     chassis.setMotors(0.1);
