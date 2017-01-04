@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleop;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.*;
+
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.ashebots.ftcandroidlib.complexOps.*;
 
@@ -13,8 +13,9 @@ public class MainTeleOp extends AdvOpMode {
     JoyEvent drive = new JoyEvent(1.0,1.0,1.0);
     JoyEvent mechanum = new JoyEvent(1.0,1.0,1.0);
 
-    AdvMotor sweeper;
+    AdvMotor bottomSweeper;
     AdvMotor accelerator;
+    Servo topSweeper;
 
     BoolEvent aButton = new BoolEvent();
     BoolEvent bButton = new BoolEvent();
@@ -26,10 +27,13 @@ public class MainTeleOp extends AdvOpMode {
     int speedMode = 1;
     @Override
     public void init() {
+        topSweeper = srv("topSweep");
         lift = mtr("Lift");
         chassis = chassismechanum("Left", "Right", "LeftBack", "RightBack");
-        sweeper = mtr("Sweeper");
+        bottomSweeper = mtr("Sweeper");
         accelerator = mtr("Accelerator");
+        topSweeper.setDirection(Servo.Direction.REVERSE);
+        bottomSweeper.reverse();
     }
 
     @Override
@@ -99,12 +103,25 @@ public class MainTeleOp extends AdvOpMode {
         } else {
             accelerator.stop();
         }
-        //Sweeper controls
+        //Sweeper controls for both sweepers
         if (gamepad1.left_trigger>0) {
-            sweeper.setMotor(-1);
+            bottomSweeper.setMotor(1);
+            topSweeper.setPosition(1);
         } else if (gamepad1.left_bumper) {
-            sweeper.setMotor(1);
-        } else sweeper.stop();
+            bottomSweeper.setMotor(-1);
+            topSweeper.setPosition(0);
+        } else if (gamepad1.dpad_up){
+            //When the dpad is pressed up, the bottom sweeper will rotate inward
+            bottomSweeper.setMotor(1);
+            topSweeper.setPosition(0.5);
+        } else if (gamepad1.dpad_down){
+            //When the dpad is pressed down, the bottom sweeper will rotate outward
+            topSweeper.setPosition(0.5);
+            bottomSweeper.setMotor(-1);
+        } else{
+            bottomSweeper.setMotor(0);
+            topSweeper.setPosition(0.5);
+        }
         //Lift
         if (gamepad1.right_bumper) {
             lift.setMotor(1);
