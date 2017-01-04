@@ -5,6 +5,7 @@ import org.ashebots.ftcandroidlib.complexOps.*;
 
 public class ShootBall extends AutoRoutine {
     Chassis chassis;
+    Servo sweeperTop;
     AdvMotor sweeper;
     AdvMotor accelerator;
     Timer timer = new Timer();
@@ -12,9 +13,10 @@ public class ShootBall extends AutoRoutine {
     double oldEnc = 0;
     double oldChange = 0;
     int shootcount = 0;
-    public ShootBall(Chassis chassis, AdvMotor sweeper, AdvMotor accelerator, double angle) {
+    public ShootBall(Chassis chassis, Servo sweeperTop, AdvMotor sweeper, AdvMotor accelerator, double angle) {
         this.chassis = chassis;
         this.sweeper = sweeper;
+        this.sweeperTop = sweeperTop;
         this.accelerator = accelerator;
         this.angle = angle;
     }
@@ -46,7 +48,8 @@ public class ShootBall extends AutoRoutine {
         }
         if (step==4) {
             sweeper.setMotor(1);
-            if (timer.tRange(1000)) {
+            sweeperTop.setPosition(1);
+            if (timer.tRange(2000)) {
                 return true;
             }
         }
@@ -57,6 +60,7 @@ public class ShootBall extends AutoRoutine {
         chassis.stop();
         accelerator.stop();
         sweeper.stop();
+        sweeperTop.setPosition(0.5);
     }
     @Override
     public void between() {

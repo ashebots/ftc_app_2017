@@ -10,6 +10,7 @@ public class ModularAuto extends AutoRoutine {
     double[][] pos;
     Chassis chassis;
     Scaler foot;
+    Servo sweeperTop;
     public Vector next;
     AutoRoutine special;
     public AdvMotor sweeper;
@@ -34,7 +35,8 @@ public class ModularAuto extends AutoRoutine {
     int wait = 0;
     Timer timer = new Timer();
 
-    public ModularAuto(double[][] position, boolean blue, Chassis c, Scaler s, AdvMotor accelerator, AdvMotor sweeper) {
+    public ModularAuto(double[][] position, boolean blue, Chassis c, Scaler s, AdvMotor accelerator, AdvMotor sweeper, Servo sweeperTop) {
+        this.sweeperTop = sweeperTop;
         this.blue = blue;
         //puts these values in the program
         pos = position;
@@ -46,7 +48,8 @@ public class ModularAuto extends AutoRoutine {
         between();
     }
 
-    public ModularAuto(double[][] position, boolean blue, Chassis c, Scaler s, AdvMotor accelerator, AdvMotor sweeper, int time) {
+    public ModularAuto(double[][] position, boolean blue, Chassis c, Scaler s, AdvMotor accelerator, AdvMotor sweeper, Servo sweeperTop, int time) {
+        this.sweeperTop = sweeperTop;
         this.blue = blue;
         //puts these values in the program
         pos = position;
@@ -79,16 +82,16 @@ public class ModularAuto extends AutoRoutine {
             special = new Ramp(chassis);
         }
         else if (pos[s+1]==ModularAuto.CLOSE_BEACON) {
-            special = new PressButton(chassis, foot, 0); //replace with chassis
+            special = new PressButton(chassis, foot, 0, blue); //replace with chassis
         }
         else if (pos[s+1]==ModularAuto.FAR_BEACON) {
-            special = new PressButton(chassis, foot, 0); //replace with chassis
+            special = new PressButton(chassis, foot, 0, blue); //replace with chassis
         }
         else if (pos[s+1]==ModularAuto.CLOSE_THROW) {
-            special = new ShootBall(chassis, sweeper, accelerator, -15*reversal);
+            special = new ShootBall(chassis, sweeperTop, sweeper, accelerator, -15*reversal);
         }
         else if (pos[s+1]==ModularAuto.FAR_THROW) {
-            special = new ShootBall(chassis, sweeper, accelerator, 15*reversal);
+            special = new ShootBall(chassis, sweeperTop, sweeper, accelerator, 15*reversal);
         }
         else if (pos[s+1]==ModularAuto.CLOSE_PARK) {
             special = new Ball(sweeper);
