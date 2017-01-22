@@ -13,9 +13,9 @@ public class Ramp extends AutoRoutine {
 
     @Override
     public boolean states(int step) {
-        chassis.setMotors(0.5);
+        //chassis.setMotors(0.5);
         if (chassis.PRange(5, INF)) return true;
-        return false;
+        return true; //return false;
     }
 
 

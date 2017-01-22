@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode.auto;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.ashebots.ftcandroidlib.complexOps.*;
 
@@ -10,7 +9,7 @@ public class ModularAuto extends AutoRoutine {
     double[][] pos;
     Chassis chassis;
     Scaler foot;
-    Servo sweeperTop;
+    AdvMotor sweeperTop;
     public Vector next;
     AutoRoutine special;
     public AdvMotor sweeper;
@@ -19,13 +18,13 @@ public class ModularAuto extends AutoRoutine {
 
     //COORDINATES in feet
     static public double[] RAMP = {1.5,1.5}; //gets onto the ramp
-    static public double[] RAMP_PARK = {1.5, 1.5}; //gets onto the ramp fully
-    static public double[] CLOSE_PARK = {6,5.25};
-    static public double[] FAR_PARK = {5.25,6};
+    static public double[] RAMP_PARK = {1, 1}; //gets onto the ramp fully
+    static public double[] CLOSE_PARK = {6,5};
+    static public double[] FAR_PARK = {5,6};
     static public double[] CLOSE_BEACON = {1.5,5};
     static public double[] FAR_BEACON = {1.5,9};
-    static public double[] CLOSE_HUB = {6,3.5};
-    static public double[] FAR_HUB = {4,3.5};
+    static public double[] CLOSE_HUB = {6,4};
+    static public double[] FAR_HUB = {4,4};
     static public double[] CLOSE_THROW = {6,2.5};
     static public double[] FAR_THROW = {4,2.5};
     static public double[] LEFT_START = {4,0.75};
@@ -35,7 +34,7 @@ public class ModularAuto extends AutoRoutine {
     int wait = 0;
     Timer timer = new Timer();
 
-    public ModularAuto(double[][] position, boolean blue, Chassis c, Scaler s, AdvMotor accelerator, AdvMotor sweeper, Servo sweeperTop) {
+    public ModularAuto(double[][] position, boolean blue, Chassis c, Scaler s, AdvMotor accelerator, AdvMotor sweeper, AdvMotor sweeperTop) {
         this.sweeperTop = sweeperTop;
         this.blue = blue;
         //puts these values in the program
@@ -48,7 +47,7 @@ public class ModularAuto extends AutoRoutine {
         between();
     }
 
-    public ModularAuto(double[][] position, boolean blue, Chassis c, Scaler s, AdvMotor accelerator, AdvMotor sweeper, Servo sweeperTop, int time) {
+    public ModularAuto(double[][] position, boolean blue, Chassis c, Scaler s, AdvMotor accelerator, AdvMotor sweeper, AdvMotor sweeperTop, int time) {
         this.sweeperTop = sweeperTop;
         this.blue = blue;
         //puts these values in the program
@@ -65,6 +64,7 @@ public class ModularAuto extends AutoRoutine {
     @Override
     public void stop() {
         next.stop();
+        special.stop();
         chassis.stop();
     }
 
@@ -94,10 +94,7 @@ public class ModularAuto extends AutoRoutine {
             special = new ShootBall(chassis, sweeperTop, sweeper, accelerator, 15*reversal);
         }
         else if (pos[s+1]==ModularAuto.CLOSE_PARK) {
-            special = new Ball(sweeper);
-        }
-        else if (pos[s+1]==ModularAuto.FAR_PARK) {
-            special = new Ball(sweeper);
+            special = new Ball(sweeper, chassis);
         }
         else {
             special = null;

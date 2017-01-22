@@ -13,11 +13,11 @@ public class ButtonTest extends AdvOpMode {
     Chassis c;
     @Override
     public void init() {
-        double[][] sequence = {ModularAuto.LEFT_START,ModularAuto.FAR_THROW,ModularAuto.FAR_BEACON,ModularAuto.CLOSE_BEACON,ModularAuto.FAR_PARK};
+        double[][] sequence = {ModularAuto.LEFT_START,ModularAuto.FAR_THROW,ModularAuto.FAR_BEACON,ModularAuto.CLOSE_BEACON};
         Scaler s = new Scaler();
         s.setTicksPer(700);
         c = imuchassis("Left","Right","IMU");
-        a = new ModularAuto(sequence, false, c,s,mtr("Accelerator"),mtr("Sweeper"));
+        a = new ModularAuto(sequence, false, c,s,mtr("Accelerator"),mtr("Sweeper"),mtr("topSweep"));
     }
 
     @Override

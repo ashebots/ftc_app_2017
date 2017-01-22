@@ -6,11 +6,13 @@ import org.ashebots.ftcandroidlib.complexOps.*;
  */
 public class Ball extends AutoRoutine {
     AdvMotor sweeper;
+    Chassis chassis;
     Timer timer = new Timer();
     boolean reset = true;
 
-    public Ball (AdvMotor s) {
+    public Ball (AdvMotor s, Chassis c) {
         sweeper = s;
+        chassis = c;
     }
 
     @Override
@@ -19,7 +21,8 @@ public class Ball extends AutoRoutine {
             reset = false;
             timer.resetTimer();
         }
-        sweeper.setMotor(-0.1);
+        //sweeper.setMotor(-0.1);
+        chassis.setMotors(-0.065);
         if (timer.tRange(3000)) {
             return true;
         }
@@ -30,6 +33,7 @@ public class Ball extends AutoRoutine {
     @Override
     public void stop() {
         sweeper.stop();
+        chassis.stop();
     }
 
     @Override

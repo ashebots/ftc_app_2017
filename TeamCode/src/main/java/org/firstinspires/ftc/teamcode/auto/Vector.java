@@ -6,11 +6,11 @@ import org.ashebots.ftcandroidlib.complexOps.*;
  */
 public class Vector extends AutoRoutine {
     Chassis chassis;
-    Scaler foot;
+    public Scaler foot;
     public double[] coords = new double[4];
-    double distance;
-    double x;
-    double y;
+    public double distance;
+    public double x;
+    public double y;
 
     public Vector(double x1, double y1, double x2, double y2, Scaler s, Chassis c) {
         c.resetEncs();
@@ -35,8 +35,9 @@ public class Vector extends AutoRoutine {
 
     @Override
     public boolean states(int step) {
-        chassis.omniDrive(x, y);
-        return chassis.getEncMechanum()>=foot.s(distance);
+        chassis.targetAngle = chassis.angle();
+        chassis.omniDrive(-x, y); //x, y
+        return Math.abs(chassis.getEncMechanum())>=foot.s(distance);
     }
 
     @Override
