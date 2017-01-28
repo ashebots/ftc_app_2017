@@ -31,7 +31,7 @@ public class MainTeleOp extends AdvOpMode {
         topSweeper = srv("topSweep");
         lift = mtr("Lift");
         chassis = chassismechanum("Left", "Right", "LeftBack", "RightBack");
-        bottomSweeper = mtr("Sweeper");
+        bottomSweeper = mtr("bottomSweep");
         accelerator = mtr("Accelerator");
         topSweeper.setDirection(Servo.Direction.REVERSE);
         bottomSweeper.reverse();

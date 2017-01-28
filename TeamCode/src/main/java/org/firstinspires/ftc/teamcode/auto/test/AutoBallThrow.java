@@ -17,7 +17,11 @@ public class AutoBallThrow extends AdvOpMode {
         Scaler s = new Scaler();
         s.setTicksPer(700);
         c = imuchassis("Left", "Right", "IMU");
+<<<<<<< Updated upstream
         a = new ModularAuto(sequence, false, c,s,mtr("Accelerator"),mtr("Sweeper"),mtr("topSweep"));
+=======
+        a = new ModularAuto(sequence, false, c,s,mtr("Accelerator"), mtr("bottomSweeper"), srv("topSweeper"));
+>>>>>>> Stashed changes
     }
 
     @Override

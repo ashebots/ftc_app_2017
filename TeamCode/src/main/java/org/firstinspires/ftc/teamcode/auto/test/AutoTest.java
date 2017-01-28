@@ -7,21 +7,17 @@ import org.ashebots.ftcandroidlib.complexOps.*;
 /**
  * Created by apple on 9/17/16.
  */
-@Autonomous(name="Button Test", group ="Test")
-public class ButtonTest extends AdvOpMode {
+@Autonomous(name="Auto Test", group ="Test")
+public class AutoTest extends AdvOpMode {
     ModularAuto a;
     Chassis c;
     @Override
     public void init() {
-        double[][] sequence = {ModularAuto.LEFT_START,ModularAuto.FAR_THROW,ModularAuto.FAR_BEACON,ModularAuto.CLOSE_BEACON};
+        double[][] sequence = {ModularAuto.CENTER_START,ModularAuto.CLOSE_PARK,ModularAuto.RAMP_PARK};
         Scaler s = new Scaler();
         s.setTicksPer(700);
         c = imuchassis("Left","Right","IMU");
-<<<<<<< Updated upstream
-        a = new ModularAuto(sequence, false, c,s,mtr("Accelerator"),mtr("Sweeper"),mtr("topSweep"));
-=======
-        a = new ModularAuto(sequence, false, c,s,mtr("Accelerator"),mtr("bottomSweeper"),srv("topSweeper"));
->>>>>>> Stashed changes
+        a = new ModularAuto(sequence, false, c,s,mtr("Accelerator"),mtr("bottomSweeper"), srv("topSweeper"));
     }
 
     @Override
