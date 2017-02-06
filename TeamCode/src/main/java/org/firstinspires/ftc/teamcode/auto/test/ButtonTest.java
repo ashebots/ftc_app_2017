@@ -7,31 +7,33 @@ import org.ashebots.ftcandroidlib.complexOps.*;
 /**
  * Created by apple on 9/17/16.
  */
-@Autonomous(name="Button Test", group ="Test")
+@Autonomous(name="Button Test",group="Z")
 public class ButtonTest extends AdvOpMode {
+    public ButtonTest() {
+        msStuckDetectInit = 60000;
+    }
     ModularAuto a;
-    Chassis c;
+    ChassisMechanum c;
     @Override
     public void init() {
-        double[][] sequence = {ModularAuto.LEFT_START,ModularAuto.FAR_THROW,ModularAuto.FAR_BEACON,ModularAuto.CLOSE_BEACON};
+        double[][] sequence = {ModularAuto.LEFT_START,ModularAuto.FAR_THROW,ModularAuto.CLOSE_BEACON,ModularAuto.BEACON_HUB,ModularAuto.CLOSE_PARK};
         Scaler s = new Scaler();
         s.setTicksPer(700);
-        c = imuchassis("Left","Right","IMU");
-        a = new ModularAuto(sequence, false, c,s,mtr("Accelerator"),mtr("Sweeper"),mtr("topSweep"));
+        c = imuchassismechanum("Left","Right","LeftBack","RightBack","IMU");
+        a = new ModularAuto(sequence, false, c,s,mtr("Accelerator"),mtr("Sweeper"),mtr("topSweep"), 2);
+        a.initVuforia();
     }
 
     @Override
     public void loop() {
         a.run();
-        telemetry.addData("Angle", c.angle());
-        telemetry.addData("Pitch", c.pitch());
-        telemetry.addData("Roll", c.roll());
-        telemetry.addData("Left", c.motorLeft.getCurrentPosition()-c.loff);
-        telemetry.addData("Right", c.motorRight.getCurrentPosition()-c.roff);
-        double[] coords = a.next.coords;
-        telemetry.addData("First Coordinate",coords[0]+", "+coords[1]);
-        telemetry.addData("Second Coordinate",coords[2]+", "+coords[3]);
-        telemetry.addData("State",a.getStep());
+        telemetry.addData("Vuforia Angle", a.vuforia.picAngle(3));
+        telemetry.addData("Vuforia Side", a.vuforia.picSide(3));
+        telemetry.addData("Blue on Left", a.vuforia.leftBlue);
+        telemetry.addData("Blue on Right", a.vuforia.rightBlue);
+        if (a.special != null) {
+            telemetry.addData("Step",a.special.getStep());
+        }
     }
 
     @Override

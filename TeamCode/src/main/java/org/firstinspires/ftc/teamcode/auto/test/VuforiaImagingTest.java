@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.auto.VuforiaImaging;
 /**
  * Created by jezebelquit on 11/12/16.
  */
-@Autonomous(name="VuforiaImaging")
+@Autonomous(name="VuforiaImaging",group = "Z")
 public class VuforiaImagingTest extends AdvOpMode {
     public VuforiaImagingTest() {
         msStuckDetectInit = 10000;

@@ -5,7 +5,7 @@ import org.ashebots.ftcandroidlib.complexOps.*;
 
 public class PressButton extends AutoRoutine {
     Chassis chassis;
-    VuforiaImaging vuforia = new VuforiaImaging();
+    VuforiaImaging vuforia;
 
     Scaler foot;
 
@@ -13,13 +13,13 @@ public class PressButton extends AutoRoutine {
 
     boolean colorEqualsBlue;
 
-    public PressButton(Chassis c, Scaler s, int t, boolean isBlue) {
-        vuforia.init();
-        vuforia.start();
+    public PressButton(Chassis c, Scaler s, int t, boolean isBlue, VuforiaImaging vuforia) {
         chassis = c;
         foot = s;
         target = t;
         colorEqualsBlue = isBlue;
+        this.vuforia = vuforia;
+        vuforia.start();
     }
 
     @Override
@@ -31,42 +31,34 @@ public class PressButton extends AutoRoutine {
         //State Machine
         switch (step) {
             case (0): //turn to approx angle (IMU)
-                AddTelemertyData("State", "IMU turn");
-                double angle = 90;
-                if (target > 1){
-                    angle = -90; //if on blue rotate 180 degrees
+                double angle = -90;
+                if (colorEqualsBlue){
+                    angle = 90; //if on blue rotate 180 degrees
                 }
                 angle = chassis.r(angle - chassis.angle()); //angle difference
-                double spd = 0.375;
                 if (angle<0) { //which angle to turn
-                    chassis.turnMotors(0.375);
+                    chassis.turnMotors(-0.3);
                 } else {
-                    chassis.turnMotors(-0.375);
+                    chassis.turnMotors(0.3);
                 }
                 state.state(Math.abs(angle)<5,1);
 
                 break;
-            case (1): //turn to precise angle (VUF)
-                AddTelemertyData("State", "VUF turn");
-                angle = 90;
-                if (target > 1){
-                    angle = -90; //if on blue rotate 180 degrees
-                }
-                angle = chassis.r(angle - angleFromPicture); //angle difference
-                if (angle<0) { //which angle to turn
-                    chassis.turnMotors(0.05);
-                } else {
-                    chassis.turnMotors(-0.05);
-                }
-                state.state(Math.abs(angle)<1,2);
-
+            case (1): //move to center line
+                if (distanceToSide>0) { //move onto the line (forward or back)
+                    chassis.omniDrive(1,0);
+                } else chassis.omniDrive(-1,0);
+                state.state(Math.abs(distanceToSide)<2,2);
                 break;
-            case (2): //move to center line
-                AddTelemertyData("State", "Align with targets");
-                if (distanceToSide<0) { //move onto the line (forward or back)
-                    chassis.setMotors(0.1);
-                } else chassis.setMotors(-0.1);
-                state.state(Math.abs(distanceToSide)<5,3);
+            case (2): //turn to precise angle (VUF)
+                double spd = 0.175;
+                if (Math.abs(angleFromPicture) < 20) spd = Math.abs(angleFromPicture) / 100 * 0.875;
+                if (angleFromPicture>0) { //which angle to turn
+                    chassis.turnMotors(-spd);
+                } else {
+                    chassis.turnMotors(spd);
+                }
+                state.state(Math.abs(angleFromPicture)<2,3);
                 break;
             case (3): //scan
                 boolean isBlueOnLeft = vuforia.getColorSide(vuforia.getImage());
@@ -77,27 +69,33 @@ public class PressButton extends AutoRoutine {
                 }
                 break;
             case (4): //move left
-                chassis.omniDrive(0.1,0);
-                state.state(distanceToSide<-76,6);
+                chassis.omniDrive(1,0);
+                state.state(distanceToSide>65,6);
                 break;
-            case (5): //move right
-                chassis.omniDrive(-0.1,0);
-                state.state(distanceToSide>76,6);
+            case (5): //move to press right
+                chassis.omniDrive(1,0);
+                state.state(distanceToSide>10,6);
                 break;
-            case (6): //press button
-                chassis.setMotors(0.1);
-                state.state(distanceAway<80,7);
-                break;
-            case (7): //move back
-                chassis.setMotors(-0.1);
-                state.state(distanceAway>300,8);
-                break;
-            case (8): //recenter
-                if (distanceToSide<0) { //pick a direction (based on which button you pressed)
-                    chassis.setMotors(-0.1);
+            case (6): //return to precise angle
+                spd = 0.175;
+                if (Math.abs(angleFromPicture) < 20) spd = Math.abs(angleFromPicture) / 100 * 0.875;
+                if (angleFromPicture>0) { //which angle to turn
+                    chassis.turnMotors(-spd);
                 } else {
-                    chassis.setMotors(0.1);
+                    chassis.turnMotors(spd);
                 }
+                state.state(Math.abs(angleFromPicture)<2,7);
+                break;
+            case (7): //press button
+                chassis.setMotors(-0.5);
+                state.state(chassis.aRange(-INF, -foot.s(2)),8);
+                break;
+            case (8): //move back
+                chassis.setMotors(0.5);
+                state.state(distanceAway>400,9);
+                break;
+            case (9): //recenter
+                chassis.omniDrive(-1,0);
                 if (Math.abs(distanceToSide)<5) return true;
                 break;
         }

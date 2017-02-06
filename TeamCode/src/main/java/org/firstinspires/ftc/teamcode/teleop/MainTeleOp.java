@@ -1,8 +1,12 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.qualcomm.hardware.adafruit.BNO055IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.ashebots.ftcandroidlib.complexOps.*;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TeleOp", group ="TeleOp")
 
@@ -15,7 +19,7 @@ public class MainTeleOp extends AdvOpMode {
 
     AdvMotor bottomSweeper;
     AdvMotor accelerator;
-    Servo topSweeper;
+    AdvMotor topSweeper;
 
     BoolEvent aButton = new BoolEvent();
     BoolEvent bButton = new BoolEvent();
@@ -24,17 +28,19 @@ public class MainTeleOp extends AdvOpMode {
 
     boolean accTog;
     boolean frtTog = true;
+
+    long speedTime;
     int speedMode = 1;
 
     @Override
     public void init() {
-        topSweeper = srv("topSweep");
+        topSweeper = mtr("topSweep");
         lift = mtr("Lift");
-        chassis = chassismechanum("Left", "Right", "LeftBack", "RightBack");
+        chassis = imuchassismechanum("Left", "Right", "LeftBack", "RightBack", "IMU");
         bottomSweeper = mtr("Sweeper");
         accelerator = mtr("Accelerator");
-        topSweeper.setDirection(Servo.Direction.REVERSE);
         bottomSweeper.reverse();
+        accelerator.setTargetSpeed(900);
     }
 
     @Override
@@ -44,8 +50,6 @@ public class MainTeleOp extends AdvOpMode {
 
     @Override
     public void loop() {
-        telemetry.addData("Frt",chassis.motorRight.getCurrentPosition());
-        telemetry.addData("Bck",chassis.motorRightB.getCurrentPosition());
         //Speed Mode
         if (xButton.parse(gamepad1.x).equals("PRESSED")) { //fast
             if (speedMode == 1) {
@@ -89,41 +93,52 @@ public class MainTeleOp extends AdvOpMode {
                 motors[1] = -placeholder;
             }
             chassis.moveMotors(motors[0],motors[1]);
-        } else { //Mechanum Mode
+        } else if (mechnMode) { //Mechanum Mode
             double modifier = 0.5;
             if (speedMode == 2) modifier = 0.25; //slow mode
             if (speedMode == 1) modifier = 1; //fast mode
             if (frtTog) modifier *= -1;
             chassis.omniDrive(modifier*gamepad1.right_stick_x,modifier*gamepad1.right_stick_y);
+        } else {
+            chassis.stop();
         }
 
         //Toggle accelerator
-        accTog = (accTog ^ yButton.parse(gamepad1.y).equals("PRESSED"));
+        if (yButton.parse(gamepad1.y).equals("PRESSED")) {
+            accTog = !accTog;
+            speedTime = System.currentTimeMillis();
+        }
         if (accTog) {
             accelerator.setMotor(1);
+            double timeActive = (System.currentTimeMillis() - speedTime) / 1000;
+            if (timeActive < 3) {
+                telemetry.addData("Shooter Speed",3 - timeActive);
+            } else {
+                telemetry.addData("Shooter Speed","Ready for Launch");
+            }
         } else if (gamepad1.start) {
-            accelerator.setMotor(-0.05);
+            accelerator.setMotor(-0.1);
+            telemetry.addData("Shooter Speed","Backing Up");
         } else {
             accelerator.stop();
+            telemetry.addData("Shooter Speed","Inactive");
         }
         //Sweeper controls for both sweepers
         if (gamepad1.left_trigger>0) {
+            topSweeper.setMotor(-1);
             bottomSweeper.setMotor(1);
-            topSweeper.setPosition(1);
         } else if (gamepad1.left_bumper) {
+            topSweeper.setMotor(1);
             bottomSweeper.setMotor(-1);
-            topSweeper.setPosition(0);
-        } else if (gamepad1.dpad_up){
-            //When the dpad is pressed up, the bottom sweeper will rotate inward
-            bottomSweeper.setMotor(1);
-            topSweeper.setPosition(0.5);
         } else if (gamepad1.dpad_down){
-            //When the dpad is pressed down, the bottom sweeper will rotate outward
-            topSweeper.setPosition(0.5);
             bottomSweeper.setMotor(-1);
-        } else{
-            bottomSweeper.setMotor(0);
-            topSweeper.setPosition(0.5);
+            topSweeper.stop();
+        } else if (gamepad1.dpad_up){
+            topSweeper.setMotor(1);
+            bottomSweeper.stop();
+        } else {
+            topSweeper.stop();
+            bottomSweeper.stop();
         }
         //Lift
         if (gamepad1.right_bumper) {

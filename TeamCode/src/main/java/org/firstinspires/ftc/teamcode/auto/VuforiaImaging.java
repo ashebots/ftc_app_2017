@@ -41,7 +41,7 @@ public class VuforiaImaging {
         return -pose.getTranslation().get(2);
     }
     //finds left/right distance relative to camera of target, right is positive. In millimeters
-    public double picSide(int pic) {
+    public double rawPicSide(int pic) {
         OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) beacons.get(pic).getListener()).getPose();
         if (pose==null) return 0;
         return -pose.getTranslation().get(0);
@@ -51,12 +51,20 @@ public class VuforiaImaging {
         OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) beacons.get(pic).getListener()).getPose();
         //If no target found return 180
         if (pose==null) return 180;
-        double angle = Math.toDegrees(Math.asin(pose.get(0,0)))-90;
+        double angle = Math.toDegrees(Math.asin(pose.get(0,2)));
         if (angle < -180) {
             angle += 360;
         }
         return angle;
     }
+
+    public double picSide(int pic) {
+        double x = rawPicSide(pic);
+        double z = picDistance(pic);
+        double angle = Math.toRadians(picAngle(pic));
+        return Math.sin(angle)*(z - x / Math.tan(angle));
+    }
+
     Image image = null;
     public Image getImage() {
         Frame frame = null;
@@ -76,24 +84,26 @@ public class VuforiaImaging {
         return image;
     }
 
+    public int leftBlue;
+    public int rightBlue;
     int pixelSkip = 10;
     public boolean getColorSide(Image i) {
         Bitmap bm = Bitmap.createBitmap(1280,720,Bitmap.Config.RGB_565);
         bm.copyPixelsFromBuffer(i.getPixels());
-        int leftBlue = 0;
-        for (int x = 0; x < 360; x+=pixelSkip) {
-            for (int y = 0; y < 1280; y+=pixelSkip) {
+        leftBlue = 0;
+        for (int x = 50; x < 350; x+=pixelSkip) {
+            for (int y = 0; y < 1000; y+=pixelSkip) {
                 int pixel = bm.getPixel(y, x);
-                if (blueness(pixel) > 10) {
+                if (blueness(pixel) > 1) {
                     leftBlue++;
                 }
             }
         }
-        int rightBlue = 0;
-        for (int x = 360; x < 720; x+=pixelSkip) {
-            for (int y = 0; y < 1280; y+=pixelSkip) {
+        rightBlue = 0;
+        for (int x = 370; x < 670; x+=pixelSkip) {
+            for (int y = 0; y < 1000; y+=pixelSkip) {
                 int pixel = bm.getPixel(y, x);
-                if (blueness(pixel) > 10) {
+                if (blueness(pixel) > 1) {
                     rightBlue++;
                 }
             }

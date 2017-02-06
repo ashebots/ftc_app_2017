@@ -10,7 +10,7 @@ import org.ashebots.ftcandroidlib.complexOps.Chassis;
 import org.firstinspires.ftc.teamcode.auto.Ramp;
 
 
-@Autonomous(name = "RampTest", group = "Test")
+@Autonomous(name = "RampTest", group = "Z")
 public class RampTest extends AdvOpMode
 {
     Ramp ramp;
@@ -19,7 +19,7 @@ public class RampTest extends AdvOpMode
     @Override
     public void init () {
         chassis = imuchassis("Left","Right","IMU");
-        ramp = new Ramp(chassis);
+        ramp = new Ramp(chassis, false);
 
     }
 

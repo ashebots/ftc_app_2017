@@ -10,23 +10,22 @@ public class ShootBall extends AutoRoutine {
     AdvMotor accelerator;
     Timer timer = new Timer();
     double angle;
-    double oldEnc = 0;
-    double oldChange = 0;
-    int shootcount = 0;
-    public ShootBall(Chassis chassis, AdvMotor sweeperTop, AdvMotor sweeper, AdvMotor accelerator, double angle) {
+    boolean ball1;
+    public ShootBall(Chassis chassis, AdvMotor sweeperTop, AdvMotor sweeper, AdvMotor accelerator, double angle, int balls) {
         this.chassis = chassis;
         this.sweeper = sweeper;
         this.sweeperTop = sweeperTop;
         this.accelerator = accelerator;
         this.angle = angle;
+        ball1 = balls == 1;
     }
     @Override
     public boolean states(int step) { //aim
         if (step==0) {
             double difference = chassis.angle() - angle; //difference between the angles
-            double spd = 0.5;
+            double spd = 0.25;
             if (Math.abs(difference)<25) {
-                spd = Math.abs(difference)/50;
+                spd = Math.abs(difference)/100;
             }
             if (difference > 0){ //move the correct direction
                 chassis.turnMotors(-spd);
@@ -36,15 +35,17 @@ public class ShootBall extends AutoRoutine {
             state.state((Math.abs(difference)<2.5), 1);
         }
         if (step==1) { //wait until motor is fully sped up
-            accelerator.setMotor(1);
-            state.state(timer.tRange(2000), 2);
+            accelerator.setMotor(0.2075);
+            state.state(accelerator.speed()>800, 2);
         }
         if (step==2) { //shoot
-            sweeper.setMotor(1);
-            state.state(sweeper.aRange(1000, INF),3); //run until it has fed the first ball
+            sweeperTop.setMotor(1);
+            state.state(timer.tRange(2000),3); //run until it has fed the first ball
         }
         if (step==3) { //respeed as friction just slowed it
-            state.state(timer.tRange(1000), 4);
+            if (ball1) return true;
+            sweeper.setMotor(1);
+            state.state(accelerator.speed()>800, 4);
         }
         if (step==4) {
             sweeper.setMotor(1);

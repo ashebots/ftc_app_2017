@@ -22,8 +22,8 @@ public class Ball extends AutoRoutine {
             timer.resetTimer();
         }
         //sweeper.setMotor(-0.1);
-        chassis.setMotors(-0.065);
-        if (timer.tRange(3000)) {
+        chassis.setMotors(-0.1);
+        if (timer.tRange(850)) {
             return true;
         }
         return false;

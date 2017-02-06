@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.R;
 /**
  * Created by jezebelquit on 11/12/16.
  */
-@Autonomous(name="VuforiaTestOpMode")
+@Autonomous(name="VuforiaTestOpMode",group = "Z")
 public class VuforiaTestOpMode extends OpMode {
     VuforiaTrackables beacons;
     @Override
