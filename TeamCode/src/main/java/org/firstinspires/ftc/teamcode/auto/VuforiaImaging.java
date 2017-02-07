@@ -88,32 +88,41 @@ public class VuforiaImaging {
     public int rightBlue;
     int pixelSkip = 10;
     public boolean getColorSide(Image i) {
+        totalblue = 0;
+        totalred = 0;
         Bitmap bm = Bitmap.createBitmap(1280,720,Bitmap.Config.RGB_565);
         bm.copyPixelsFromBuffer(i.getPixels());
-        leftBlue = 0;
-        for (int x = 50; x < 350; x+=pixelSkip) {
-            for (int y = 0; y < 1000; y+=pixelSkip) {
+        rightBlue = 0;
+        for (int x = 0; x < 360; x+=pixelSkip) {
+            for (int y = 0; y < 1280; y+=pixelSkip) {
                 int pixel = bm.getPixel(y, x);
-                if (blueness(pixel) > 1) {
-                    leftBlue++;
+                toRGB(pixel);
+                if (blue > 25 && red < 25) {
+                    rightBlue++;
                 }
             }
         }
-        rightBlue = 0;
-        for (int x = 370; x < 670; x+=pixelSkip) {
-            for (int y = 0; y < 1000; y+=pixelSkip) {
+        leftBlue = 0;
+        for (int x = 360; x < 720; x+=pixelSkip) {
+            for (int y = 0; y < 1280; y+=pixelSkip) {
                 int pixel = bm.getPixel(y, x);
-                if (blueness(pixel) > 1) {
-                    rightBlue++;
+                toRGB(pixel);
+                if (blue > 25 && red < 25) {
+                    leftBlue++;
                 }
             }
         }
         return leftBlue > rightBlue;
     }
 
-    public int blueness(int pixel) {
-        int blue = pixel & 31;
-        int red = (pixel >> 11) & 31;
-        return blue - red;
+    public int blue;
+    public int red;
+    public int totalblue;
+    public int totalred;
+    public void toRGB(int pixel) {
+        blue = pixel & 31;
+        totalblue += blue;
+        red = (pixel >> 11) & 31;
+        totalred += red;
     }
 }

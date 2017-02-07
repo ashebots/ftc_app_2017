@@ -26,33 +26,24 @@ public class VuforiaImagingTest extends AdvOpMode {
         vuforia = new VuforiaImaging();
         vuforia.init();
     }
-    double timeToRun;
     public void start(){
         vuforia.start();
     }
 
     boolean side = false;
-    int trues = 0;
     public void loop() {
         if (a.parse(gamepad1.a).equals("PRESSED")) {
-            trues = 0;
-            t.resetTimer();
-            int scans = 0;
-            while (scans < 10) {
-                if (t.tRange(100)) {
-                    scans++;
-                    t.resetTimer();
-                    Image i = vuforia.getImage();
-                    if (vuforia.getColorSide(i)) {
-                        trues++;
-                    }
-                }
-            }
-            side = trues < 5;
+            Image i = vuforia.getImage();
+            side = vuforia.getColorSide(i);
         }
         telemetry.addLine("Distance: "+vuforia.picDistance(0));
         telemetry.addLine("Side Distance: "+vuforia.picSide(0));
         telemetry.addLine("Angle: "+vuforia.picAngle(0));
-        telemetry.addLine("Is Blue on Left:"+side);
+        telemetry.addLine("Is Blue on Left: "+side);
+        telemetry.addLine("Left Blue: "+vuforia.leftBlue);
+        telemetry.addLine("Right Blue: "+vuforia.rightBlue);
+        telemetry.addLine("Blue Score: "+vuforia.totalblue);
+        telemetry.addLine("Red Score: "+vuforia.totalred);
+        telemetry.addLine("Blueness: "+(vuforia.totalblue - vuforia.totalred));
     }
 }
