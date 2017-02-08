@@ -67,16 +67,20 @@ public class PressButton extends AutoRoutine {
                 }
                 boolean isBlueOnLeft = vuforia.getColorSide(vuforia.getImage());
                 if (isBlueOnLeft ^ colorEqualsBlue) {
-                    state.state(true, 6); //one's true, one's false, therefore, our color is not on the left
+                    state.state(true, 5); //one's true, one's false, therefore, our color is not on the left
                 } else {
                     state.state(true, 4); //both are the same, therefore, our color is on the left
                 }
                 break;
             case (4): //move left
                 chassis.omniDrive(0.75,0);
-                state.state(Math.abs(distanceToSide)>65,5);
+                state.state(Math.abs(distanceToSide)>65,6);
                 break;
-            case (5): //return to precise angle
+            case (5): //move right a little bit
+                chassis.omniDrive(-0.75,0);
+                state.state(Math.abs(distanceToSide)>20,6);
+                break;
+            case (6): //return to precise angle
                 spd = 0.175;
                 if (Math.abs(angleFromPicture) < 20) spd = Math.abs(angleFromPicture) / 100 * 0.875;
                 if (angleFromPicture>0) { //which angle to turn
@@ -84,22 +88,21 @@ public class PressButton extends AutoRoutine {
                 } else {
                     chassis.turnMotors(spd);
                 }
-                state.state(Math.abs(angleFromPicture)<2,6);
+                state.state(Math.abs(angleFromPicture)<2,7);
                 break;
-            case (6): //press button
+            case (7): //press button
                 chassis.setMotors(-0.25);
-                state.state(chassis.aRange(-INF, -foot.s(2)),7);
+                state.state(chassis.aRange(-INF, -foot.s(2)),8);
                 break;
-            case (7): //move back
-                return true; //fix opmode
-                //chassis.setMotors(0.5);
-                //state.state(distanceAway>400,8);
-                //break;
-            case (8): //recenter
+            case (8): //move back
+                chassis.setMotors(0.5);
+                state.state(distanceAway>350,9);
+                break;
+            case (9): //recenter
                 if (distanceToSide<0) { //move onto the line (forward or back)
                     chassis.omniDrive(0.75,0);
                 } else if (distanceToSide>0) chassis.omniDrive(-0.75,0);
-                if (Math.abs(distanceToSide)<10 && distanceToSide != 0) return true;
+                if (Math.abs(distanceToSide)<25 && distanceToSide != 0) return true;
                 break;
         }
         return false;
