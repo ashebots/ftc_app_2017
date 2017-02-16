@@ -29,23 +29,26 @@ public class PressButton extends AutoRoutine {
         colorEqualsBlue = isBlue;
         this.vuforia = vuforia;
         this.color = color;
-        vuforia.start();
+        //vuforia.start();
     }
 
     @Override
     public boolean states(int step) {
         //Calculate distances and angles
-        double distanceAway = vuforia.picDistance(target);
-        double distanceToSide = vuforia.picSide(target);
-        double angleFromPicture = vuforia.picAngle(target);
+        //double distanceAway = vuforia.picDistance(target);
+        double angle = -90;
+        if (colorEqualsBlue){
+            angle = 90; //if on blue rotate 180 degrees
+        }
+        double distanceToSide = color.beacon.getAnalysis().getCenter().x - 200;
+        if (color.beacon.getAnalysis().getConfidence()<0.1) {
+            distanceToSide *= -1;
+        }
+        double angleFromPicture = chassis.r(angle - chassis.angle());
         //State Machine
         switch (step) {
-            case (0): //turn to approx angle (IMU)
-                double angle = -90;
-                if (colorEqualsBlue){
-                    angle = 90; //if on blue rotate 180 degrees
-                }
-                angle = chassis.r(angle - chassis.angle()); //angle difference
+            case (0): //turn to approx angle
+                angle = angleFromPicture; //angle difference
                 if (angle<0) { //which angle to turn
                     chassis.turnMotors(-0.3);
                 } else {
@@ -53,10 +56,10 @@ public class PressButton extends AutoRoutine {
                 }
                 state.state(Math.abs(angle)<5,1);
                 break;
-            case (1): //turn to precise angle (VUF)
+            case (1): //turn to precise angle
                 double spd = 0.175;
                 if (Math.abs(angleFromPicture) < 20) spd = Math.abs(angleFromPicture) / 100 * 0.875;
-                if (angleFromPicture>0) { //which angle to turn
+                if (angleFromPicture<0) { //which angle to turn
                     chassis.turnMotors(-spd);
                 } else {
                     chassis.turnMotors(spd);
@@ -67,7 +70,7 @@ public class PressButton extends AutoRoutine {
                 //AUTOCORRECT TEST
                 spd = 1;
                 if (Math.abs(angleFromPicture) < 20) spd = Math.abs(angleFromPicture) / 20;
-                double strSpeed = (1 - spd)*0.7;
+                double strSpeed = (1 - spd) * 0.7;
                 if (distanceToSide < 0) strSpeed *= -1;
                 if (angleFromPicture < 0) spd *= -1;
                 if (distanceToSide == 0) strSpeed = spd = 0;
@@ -76,7 +79,7 @@ public class PressButton extends AutoRoutine {
                 chassis.motorRight.setPower(strSpeed-spd);
                 chassis.motorLeftB.setPower(strSpeed+spd);
                 chassis.motorRightB.setPower(-strSpeed-spd);
-                state.state(!(Math.abs(distanceToSide)<20) && distanceToSide != 0,3); // Don't know why this works, but it does.
+                state.state(!(Math.abs(distanceToSide)<10) && distanceToSide != 0,3); // Don't know why this works, but it does.
                 break;
                 /*if (distanceToSide<0) { //move onto the line (forward or back)
                     chassis.omniDrive(0.7,0);
@@ -86,7 +89,7 @@ public class PressButton extends AutoRoutine {
             case (3): //turn to precise angle (VUF)
                 spd = 0.175;
                 if (Math.abs(angleFromPicture) < 20) spd = Math.abs(angleFromPicture) / 100 * 0.875;
-                if (angleFromPicture>0) { //which angle to turn
+                if (angleFromPicture<0) { //which angle to turn
                     chassis.turnMotors(-spd);
                 } else {
                     chassis.turnMotors(spd);
@@ -114,7 +117,7 @@ public class PressButton extends AutoRoutine {
             case (7): //return to precise angle
                 spd = 0.175;
                 if (Math.abs(angleFromPicture) < 20) spd = Math.abs(angleFromPicture) / 100 * 0.875;
-                if (angleFromPicture>0) { //which angle to turn
+                if (angleFromPicture<0) { //which angle to turn
                     chassis.turnMotors(-spd);
                 } else {
                     chassis.turnMotors(spd);
@@ -131,13 +134,13 @@ public class PressButton extends AutoRoutine {
                 break;
             case (10): //move back
                 chassis.setMotors(0.5);
-                state.state(distanceAway>350,11);
+                state.state(chassis.aRange(foot.s(2),INF),11);
                 break;
             case (11): //recenter
                 if (distanceToSide<0) { //move onto the line (forward or back)
                     chassis.omniDrive(0.75,0);
                 } else if (distanceToSide>0) chassis.omniDrive(-0.75,0);
-                if (Math.abs(distanceToSide)<25 && distanceToSide != 0) return true;
+                if (Math.abs(distanceToSide)<13 && distanceToSide != 0) return true;
                 break;
         }
         return false;

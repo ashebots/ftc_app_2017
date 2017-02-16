@@ -51,7 +51,7 @@ public class MainTeleOp extends AdvOpMode {
 
     @Override
     public void loop() {
-
+        telemetry.addData("Angle",chassis.angle());
         //Speed Mode
         if (xButton.parse(gamepad1.x).equals("PRESSED")) { //fast
             if (speedMode == 1) {

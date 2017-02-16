@@ -29,8 +29,7 @@ public class ButtonTest extends AdvOpMode {
     @Override
     public void loop() {
         a.run();
-        telemetry.addData("Vuforia Angle", a.vuforia.picAngle(3));
-        telemetry.addData("Vuforia Side", a.vuforia.picSide(3));
+        telemetry.addData("Angle", c.angle());
         telemetry.addData("Beacon Color", a.color.beacon.getAnalysis().getColorString());
         if (a.special != null) {
             telemetry.addData("Step", a.special.getStep());

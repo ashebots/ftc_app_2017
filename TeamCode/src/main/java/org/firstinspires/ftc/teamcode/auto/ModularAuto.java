@@ -152,8 +152,8 @@ public class ModularAuto extends AutoRoutine {
     }
 
     public void initVuforia(HardwareMap hardwareMap) {
-        vuforia = new VuforiaImaging();
-        vuforia.init();
+        //vuforia = new VuforiaImaging();
+        //vuforia.init();
         color = new ColorImaging(hardwareMap);
         color.init();
         color.setCamera(Cameras.PRIMARY);

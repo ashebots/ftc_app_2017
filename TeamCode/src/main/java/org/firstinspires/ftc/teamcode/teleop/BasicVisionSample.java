@@ -119,7 +119,7 @@ public class BasicVisionSample extends AdvOpMode {
 
         telemetry.addData("Beacon Color", vision.beacon.getAnalysis().getColorString());
         telemetry.addData("Beacon Center", vision.beacon.getAnalysis().getLocationString());
-        telemetry.addData("Beacon Confidence", vision.beacon.getAnalysis().getConfidenceString());
+        telemetry.addData("Beacon Confidence", vision.beacon.getAnalysis().getConfidence());
         telemetry.addData("Beacon Buttons", vision.beacon.getAnalysis().getButtonString());
         telemetry.addData("Screen Rotation", vision.rotation.getScreenOrientationActual());
         telemetry.addData("Frame Rate", vision.fps.getFPSString() + " FPS");
