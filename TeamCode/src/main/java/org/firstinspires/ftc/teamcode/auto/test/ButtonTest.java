@@ -18,12 +18,12 @@ public class ButtonTest extends AdvOpMode {
 
     @Override
     public void init() {
-        double[][] sequence = {ModularAuto.LEFT_START, {4, 1.5}, ModularAuto.CLOSE_BEACON, ModularAuto.BEACON_HUB, ModularAuto.CLOSE_PARK};
+        double[][] sequence = {ModularAuto.LEFT_START, ModularAuto.FAR_THROW, ModularAuto.CLOSE_BEACON, ModularAuto.BEACON_HUB, ModularAuto.CLOSE_PARK};
         Scaler s = new Scaler();
-        s.setTicksPer(700);
+        s.setTicksPer(615);
         c = imuchassismechanum("Left", "Right", "LeftBack", "RightBack", "IMU");
-        a = new ModularAuto(sequence, false, c, s, mtr("Accelerator"), mtr("Sweeper"), mtr("topSweep"), 2);
-        a.initVuforia();
+        a = new ModularAuto(sequence, false, c, s, mtr("Accelerator"), mtr("Sweeper"), mtr("topSweep"), 1);
+        a.initVuforia(hardwareMap);
     }
 
     @Override
@@ -31,8 +31,7 @@ public class ButtonTest extends AdvOpMode {
         a.run();
         telemetry.addData("Vuforia Angle", a.vuforia.picAngle(3));
         telemetry.addData("Vuforia Side", a.vuforia.picSide(3));
-        telemetry.addData("Blue on Left", a.vuforia.leftBlue);
-        telemetry.addData("Blue on Right", a.vuforia.rightBlue);
+        telemetry.addData("Beacon Color", a.color.beacon.getAnalysis().getColorString());
         if (a.special != null) {
             telemetry.addData("Step", a.special.getStep());
         }

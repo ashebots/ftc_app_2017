@@ -42,8 +42,9 @@ public class VuforiaImagingTest extends AdvOpMode {
         telemetry.addLine("Is Blue on Left: "+side);
         telemetry.addLine("Left Blue: "+vuforia.leftBlue);
         telemetry.addLine("Right Blue: "+vuforia.rightBlue);
-        telemetry.addLine("Blue Score: "+vuforia.totalblue);
-        telemetry.addLine("Red Score: "+vuforia.totalred);
+        telemetry.addLine("Left Red: "+vuforia.leftRed);
+        telemetry.addLine("Blue Score: "+vuforia.blue);
+        telemetry.addLine("Red Score: "+vuforia.red);
         telemetry.addLine("Blueness: "+(vuforia.totalblue - vuforia.totalred));
     }
 }

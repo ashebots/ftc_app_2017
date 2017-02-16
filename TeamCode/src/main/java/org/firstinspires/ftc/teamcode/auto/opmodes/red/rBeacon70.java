@@ -23,7 +23,7 @@ public class rBeacon70 extends AdvOpMode {
         s.setTicksPer(encoderConstant);
         ChassisMechanum c = imuchassismechanum("Left","Right","LeftBack","RightBack","IMU");
         a = new ModularAuto(sequence, false, c,s,mtr("Accelerator"),mtr("Sweeper"),mtr("topSweep"), 2);
-        a.initVuforia();
+        a.initVuforia(hardwareMap);
     }
 
     @Override

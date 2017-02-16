@@ -1,26 +1,25 @@
 package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.*;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.ashebots.ftcandroidlib.complexOps.*;
 
-@TeleOp(name="IMU Test", group ="TeleOp")
+@TeleOp(name="Color Test", group ="TeleOp")
 
 public class Test extends AdvOpMode {
-    Chassis chassis;
-
-    JoyEvent n = new JoyEvent(1.0,1.0,1.0);
+    ColorSensor colorSensor;
     @Override
     public void init() {
-        chassis = chassis("Left", "Right");
+        colorSensor = hardwareMap.colorSensor.get("Color");
     }
     @Override
     public void loop() {
-        double[] mVals = n.calc(gamepad1.left_stick_x,gamepad1.left_stick_y);
-        chassis.moveMotors(mVals[1], mVals[0]);
-
+        telemetry.addData("Red",colorSensor.red());
+        telemetry.addData("Green",colorSensor.green());
+        telemetry.addData("Blue",colorSensor.blue());
     }
     @Override
     public void stop() {
-        chassis.stop();
+
     }
 }

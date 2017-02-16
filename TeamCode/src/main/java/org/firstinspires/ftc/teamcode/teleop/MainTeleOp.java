@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.hardware.adafruit.BNO055IMU;
+import com.qualcomm.hardware.hitechnic.HiTechnicNxtColorSensor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.ashebots.ftcandroidlib.complexOps.*;
@@ -20,7 +22,6 @@ public class MainTeleOp extends AdvOpMode {
     AdvMotor bottomSweeper;
     AdvMotor accelerator;
     AdvMotor topSweeper;
-
     BoolEvent aButton = new BoolEvent();
     BoolEvent bButton = new BoolEvent();
     BoolEvent xButton = new BoolEvent();
@@ -50,6 +51,7 @@ public class MainTeleOp extends AdvOpMode {
 
     @Override
     public void loop() {
+
         //Speed Mode
         if (xButton.parse(gamepad1.x).equals("PRESSED")) { //fast
             if (speedMode == 1) {

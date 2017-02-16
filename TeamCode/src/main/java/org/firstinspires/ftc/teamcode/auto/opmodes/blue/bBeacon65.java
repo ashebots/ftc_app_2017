@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.auto.opmodes.blue;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.ashebots.ftcandroidlib.complexOps.AdvOpMode;
 import org.ashebots.ftcandroidlib.complexOps.ChassisMechanum;
@@ -23,7 +24,7 @@ public class bBeacon65 extends AdvOpMode {
         s.setTicksPer(encoderConstant);
         ChassisMechanum c = imuchassismechanum("Left","Right","LeftBack","RightBack","IMU");
         a = new ModularAuto(sequence, true, c,s,mtr("Accelerator"),mtr("Sweeper"),mtr("topSweep"), 2);
-        a.initVuforia();
+        a.initVuforia(hardwareMap);
     }
 
     @Override

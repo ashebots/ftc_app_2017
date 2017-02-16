@@ -4,4 +4,6 @@ include ':TeamCode'
 
 //Ashebots helper library
 include (':AB_FtcAndroidLib')
+include ':opencv-java'
+include ':ftc-visionlib'
 project (':AB_FtcAndroidLib').projectDir = new File('../AB_FtcAndroidLib/FtcAndroidLib')

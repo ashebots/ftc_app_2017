@@ -1,6 +1,16 @@
 package org.firstinspires.ftc.teamcode.auto;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.ashebots.ftcandroidlib.complexOps.*;
+import org.lasarobotics.vision.android.Cameras;
+import org.lasarobotics.vision.ftc.resq.Beacon;
+import org.lasarobotics.vision.opmode.ColorImaging;
+import org.lasarobotics.vision.opmode.VisionOpMode;
+import org.lasarobotics.vision.opmode.extensions.CameraControlExtension;
+import org.lasarobotics.vision.util.ScreenOrientation;
+import org.opencv.core.Size;
 
 /**
  * Created by apple on 9/15/16.
@@ -16,6 +26,7 @@ public class ModularAuto extends AutoRoutine {
     public AdvMotor accelerator;
     boolean blue = false;
     public VuforiaImaging vuforia;
+    public ColorImaging color;
     int numBalls = 2;
 
     //COORDINATES in feet
@@ -24,12 +35,12 @@ public class ModularAuto extends AutoRoutine {
     static public double[] FAR_PARK = {5,6};
     static public double[] CLOSE_BEACON = {2.5,5};
     static public double[] FAR_BEACON = {2.5,9};
-    static public double[] BEACON_HUB = {2.5,7};
+    static public double[] BEACON_HUB = {2.5,6};
     static public double[] CLOSE_HUB = {6,4};
     static public double[] FAR_HUB = {4,4};
     static public double[] RIGHT_HUB = {8,1.5};
-    static public double[] CLOSE_THROW = {6,1.5};
-    static public double[] FAR_THROW = {4,1.5};
+    static public double[] CLOSE_THROW = {6,3.5};
+    static public double[] FAR_THROW = {4,3.5};
     static public double[] LEFT_START = {4,0.75};
     static public double[] CENTER_START = {6,0.75};
     static public double[] RIGHT_START = {8,0.75}; //8, 0.75
@@ -91,20 +102,20 @@ public class ModularAuto extends AutoRoutine {
             if (blue) {
                 beacon = 0;
             }
-            special = new PressButton(chassis, foot, beacon, blue, vuforia);
+            special = new PressButton(chassis, foot, beacon, blue, vuforia, color);
         }
         else if (pos[s+1]==ModularAuto.FAR_BEACON) {
             int beacon = 1;
             if (blue) {
                 beacon = 2;
             }
-            special = new PressButton(chassis, foot, beacon, blue, vuforia);
+            special = new PressButton(chassis, foot, beacon, blue, vuforia, color);
         }
         else if (pos[s+1]==ModularAuto.CLOSE_THROW) {
-            special = new ShootBall(chassis, sweeperTop, sweeper, accelerator, -13*reversal, numBalls);
+            special = new ShootBall(chassis, sweeperTop, sweeper, accelerator, -28*reversal, numBalls);
         }
         else if (pos[s+1]==ModularAuto.FAR_THROW) {
-            special = new ShootBall(chassis, sweeperTop, sweeper, accelerator, 13*reversal, numBalls);
+            special = new ShootBall(chassis, sweeperTop, sweeper, accelerator, 28*reversal, numBalls);
         }
         else if (pos[s+1]==ModularAuto.CLOSE_PARK) {
             special = new Ball(sweeper, chassis);
@@ -140,9 +151,24 @@ public class ModularAuto extends AutoRoutine {
         return false;
     }
 
-    public void initVuforia() {
+    public void initVuforia(HardwareMap hardwareMap) {
         vuforia = new VuforiaImaging();
         vuforia.init();
+        color = new ColorImaging(hardwareMap);
+        color.init();
+        color.setCamera(Cameras.PRIMARY);
+        color.setFrameSize(new Size(720, 1280));
+        color.enableExtension(VisionOpMode.Extensions.BEACON);         //Beacon detection
+        color.enableExtension(VisionOpMode.Extensions.ROTATION);       //Automatic screen rotation correction
+        color.enableExtension(VisionOpMode.Extensions.CAMERA_CONTROL); //Manual camera control
+        color.beacon.setAnalysisMethod(Beacon.AnalysisMethod.FAST);
+        color.beacon.setColorToleranceRed(0);
+        color.beacon.setColorToleranceBlue(0);
+        color.rotation.setIsUsingSecondaryCamera(false);
+        color.rotation.disableAutoRotate();
+        color.rotation.setActivityOrientationFixed(ScreenOrientation.PORTRAIT);
+        color.cameraControl.setColorTemperature(CameraControlExtension.ColorTemperature.AUTO);
+        color.cameraControl.setAutoExposureCompensation();
     }
     public void setNumBalls(int i) {
         numBalls = i;

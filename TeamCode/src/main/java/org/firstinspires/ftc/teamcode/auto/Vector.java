@@ -55,7 +55,7 @@ public class Vector extends AutoRoutine {
                 break;
             case 1:
                 spd = 1;
-                if (distance-chassis.encoderLeft<foot.s(3)) spd = (distance-chassis.encoderLeft) / (foot.s(3)); //gradual decrease
+                if (distance-chassis.encoderLeft<foot.s(4)) spd = (distance-chassis.encoderLeft) / (foot.s(4)); //gradual decrease
                 chassis.setMotors(-spd);
                 if (chassis.aRange(distance,INF) || chassis.aRange(-INF, -distance)) {
                     return true;
