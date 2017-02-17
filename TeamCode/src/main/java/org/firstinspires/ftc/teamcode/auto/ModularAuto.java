@@ -35,7 +35,7 @@ public class ModularAuto extends AutoRoutine {
     static public double[] FAR_PARK = {5,6};
     static public double[] CLOSE_BEACON = {2.5,5};
     static public double[] FAR_BEACON = {2.5,9};
-    static public double[] BEACON_HUB = {2.5,6};
+    static public double[] BEACON_HUB = {2.5,6.5};
     static public double[] CLOSE_HUB = {6,4};
     static public double[] FAR_HUB = {4,4};
     static public double[] RIGHT_HUB = {8,1.5};
@@ -57,6 +57,7 @@ public class ModularAuto extends AutoRoutine {
         foot = s;
         this.accelerator = accelerator;
         this.sweeper = sweeper;
+        this.numBalls = numBalls;
         //between calculates the next move. Called between because it runs between each step
         between();
     }
@@ -71,6 +72,7 @@ public class ModularAuto extends AutoRoutine {
         wait = time;
         this.accelerator = accelerator;
         this.sweeper = sweeper;
+        this.numBalls = numBalls;
         //between calculates the next move. Called between because it runs between each step
         between();
     }
@@ -102,20 +104,20 @@ public class ModularAuto extends AutoRoutine {
             if (blue) {
                 beacon = 0;
             }
-            special = new PressButton(chassis, foot, beacon, blue, vuforia, color);
+            special = new PressButton(chassis, foot, beacon, blue, false, color);
         }
         else if (pos[s+1]==ModularAuto.FAR_BEACON) {
             int beacon = 1;
             if (blue) {
                 beacon = 2;
             }
-            special = new PressButton(chassis, foot, beacon, blue, vuforia, color);
+            special = new PressButton(chassis, foot, beacon, blue, true, color);
         }
         else if (pos[s+1]==ModularAuto.CLOSE_THROW) {
-            special = new ShootBall(chassis, sweeperTop, sweeper, accelerator, -28*reversal, numBalls);
+            special = new ShootBall(chassis, sweeperTop, sweeper, accelerator, -30*reversal, numBalls);
         }
         else if (pos[s+1]==ModularAuto.FAR_THROW) {
-            special = new ShootBall(chassis, sweeperTop, sweeper, accelerator, 28*reversal, numBalls);
+            special = new ShootBall(chassis, sweeperTop, sweeper, accelerator, 30*reversal, numBalls);
         }
         else if (pos[s+1]==ModularAuto.CLOSE_PARK) {
             special = new Ball(sweeper, chassis);

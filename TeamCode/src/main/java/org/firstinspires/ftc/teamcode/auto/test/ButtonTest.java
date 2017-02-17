@@ -18,7 +18,7 @@ public class ButtonTest extends AdvOpMode {
 
     @Override
     public void init() {
-        double[][] sequence = {ModularAuto.LEFT_START, ModularAuto.FAR_THROW, ModularAuto.CLOSE_BEACON, ModularAuto.BEACON_HUB, ModularAuto.CLOSE_PARK};
+        double[][] sequence = {ModularAuto.LEFT_START, ModularAuto.FAR_THROW, ModularAuto.CLOSE_BEACON, ModularAuto.FAR_BEACON, ModularAuto.RAMP_PARK};
         Scaler s = new Scaler();
         s.setTicksPer(615);
         c = imuchassismechanum("Left", "Right", "LeftBack", "RightBack", "IMU");
@@ -29,11 +29,6 @@ public class ButtonTest extends AdvOpMode {
     @Override
     public void loop() {
         a.run();
-        telemetry.addData("Angle", c.angle());
-        telemetry.addData("Beacon Color", a.color.beacon.getAnalysis().getColorString());
-        if (a.special != null) {
-            telemetry.addData("Step", a.special.getStep());
-        }
     }
 
     @Override
