@@ -41,7 +41,7 @@ public class ShootBall extends AutoRoutine {
             state.state(accelerator.speed()>700 || timer.tRange(2000), 2);
         }
         if (step==2) { //shoot
-            sweeperTop.setMotor(1);
+            sweeperTop.setMotor(-1);
             state.state(timer.tRange(1500),3); //run until it has fed the first ball
         }
         if (step==3) { //respeed as friction just slowed it
@@ -52,7 +52,7 @@ public class ShootBall extends AutoRoutine {
         }
         if (step==4) {
             sweeper.setMotor(1);
-            sweeperTop.setMotor(1);
+            sweeperTop.setMotor(-1);
             if (timer.tRange(1500)) {
                 return true;
             }

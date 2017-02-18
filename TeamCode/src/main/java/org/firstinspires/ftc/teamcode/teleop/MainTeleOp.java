@@ -127,16 +127,16 @@ public class MainTeleOp extends AdvOpMode {
         }
         //Sweeper controls for both sweepers
         if (gamepad1.left_trigger>0) {
-            topSweeper.setMotor(-1);
+            topSweeper.setMotor(1);
             bottomSweeper.setMotor(1);
         } else if (gamepad1.left_bumper) {
-            topSweeper.setMotor(1);
+            topSweeper.setMotor(-1);
             bottomSweeper.setMotor(-1);
         } else if (gamepad1.dpad_down){
             bottomSweeper.setMotor(-1);
             topSweeper.stop();
         } else if (gamepad1.dpad_up){
-            topSweeper.setMotor(1);
+            topSweeper.setMotor(-1);
             bottomSweeper.stop();
         } else {
             topSweeper.stop();
