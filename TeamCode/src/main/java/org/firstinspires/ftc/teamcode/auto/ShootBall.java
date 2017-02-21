@@ -11,6 +11,7 @@ public class ShootBall extends AutoRoutine {
     Timer timer = new Timer();
     double angle;
     boolean ball1;
+    boolean ball0;
     public ShootBall(Chassis chassis, AdvMotor sweeperTop, AdvMotor sweeper, AdvMotor accelerator, double angle, int balls) {
         this.chassis = chassis;
         this.sweeper = sweeper;
@@ -20,6 +21,7 @@ public class ShootBall extends AutoRoutine {
         this.sweeper.setTargetSpeed(6000);
         this.sweeperTop.setTargetSpeed(6000);
         ball1 = balls == 1;
+        ball0 = balls == 0;
     }
     @Override
     public boolean states(int step) { //aim
@@ -37,6 +39,7 @@ public class ShootBall extends AutoRoutine {
             state.state((Math.abs(difference)<2.5), 1);
         }
         if (step==1) { //wait until motor is fully sped up
+            if (ball0) return true;
             accelerator.setMotor(0.18);
             state.state(accelerator.speed()>700 || timer.tRange(2000), 2);
         }

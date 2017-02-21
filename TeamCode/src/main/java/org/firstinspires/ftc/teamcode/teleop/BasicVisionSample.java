@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.ashebots.ftcandroidlib.complexOps.AdvOpMode;
+import org.ashebots.ftcandroidlib.complexOps.Timer;
+import org.firstinspires.ftc.teamcode.auto.CenterAlignment;
 import org.firstinspires.ftc.teamcode.auto.VuforiaImaging;
 import org.lasarobotics.vision.android.Cameras;
 import org.lasarobotics.vision.ftc.resq.Beacon;
@@ -28,6 +30,8 @@ public class BasicVisionSample extends AdvOpMode {
         msStuckDetectInit = 60000;
     }
     ColorImaging vision;
+    CenterAlignment center;
+    Timer timer;
     //VuforiaImaging vuforia;
     @Override
     public void init() {
@@ -107,11 +111,13 @@ public class BasicVisionSample extends AdvOpMode {
          */
         vision.cameraControl.setColorTemperature(CameraControlExtension.ColorTemperature.AUTO);
         vision.cameraControl.setAutoExposureCompensation();
+        center = new CenterAlignment();
+        timer = new Timer();
     }
 
     @Override
     public void start() {
-        //vuforia.start();
+        timer.resetTimer();
     }
     @Override
     public void loop() {
@@ -124,10 +130,15 @@ public class BasicVisionSample extends AdvOpMode {
         telemetry.addData("Screen Rotation", vision.rotation.getScreenOrientationActual());
         telemetry.addData("Frame Rate", vision.fps.getFPSString() + " FPS");
         telemetry.addData("Frame Size", "Width: " + vision.width + " Height: " + vision.height);
-
-        //telemetry.addData("Vuforia Angle", vuforia.picAngle(0));
-        //telemetry.addData("Vuforia Side-to-Side", vuforia.picSide(0));
-        //telemetry.addData("Vuforia Distance", vuforia.picDist(0));
+        telemetry.addData("Timer", timer.time()/10);
+        telemetry.addData("Saw Beacon",vision.beacon.getAnalysis().isBeaconFound());
+        if (timer.time() < 3000) {
+            double xPos = 1-(Math.abs(vision.beacon.getAnalysis().getCenter().x - 200)/25);
+            if (xPos < 0) xPos = 0;
+            center.inputData((int)(timer.time()/10),vision.beacon.getAnalysis().isBeaconFound(),xPos,vision.beacon.getAnalysis().getConfidence());
+        } else {
+            telemetry.addData("Center", center.findCenter());
+        }
     }
 
     @Override
