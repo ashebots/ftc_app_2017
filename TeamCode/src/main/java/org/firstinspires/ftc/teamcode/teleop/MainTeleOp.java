@@ -167,6 +167,7 @@ public class MainTeleOp extends AdvOpMode {
             if (gamepadToRead == 2) {
                 gamepadToRead = 1;
             } else gamepadToRead = 2;
+            frtTog = !frtTog;
         }
     }
     @Override
