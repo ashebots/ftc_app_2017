@@ -28,6 +28,7 @@ public class ModularAuto extends AutoRoutine {
     public VuforiaImaging vuforia;
     public ColorImaging color;
     int numBalls = 2;
+    ColorSensor lineDetector;
 
     //COORDINATES in feet
     static public double[] RAMP_PARK = {2, 2}; //gets onto the ramp fully
@@ -104,14 +105,14 @@ public class ModularAuto extends AutoRoutine {
             if (blue) {
                 beacon = 0;
             }
-            special = new PressButton(chassis, foot, beacon, blue, false, color);
+            special = new PressButton(chassis, foot, beacon, blue, false, color, lineDetector);
         }
         else if (pos[s+1]==ModularAuto.FAR_BEACON) {
             int beacon = 1;
             if (blue) {
                 beacon = 2;
             }
-            special = new PressButton(chassis, foot, beacon, blue, true, color);
+            special = new PressButton(chassis, foot, beacon, blue, true, color, lineDetector);
         }
         else if (pos[s+1]==ModularAuto.CLOSE_THROW) {
             special = new ShootBall(chassis, sweeperTop, sweeper, accelerator, -30*reversal, numBalls);
@@ -153,9 +154,8 @@ public class ModularAuto extends AutoRoutine {
         return false;
     }
 
-    public void initVuforia(HardwareMap hardwareMap) {
-        //vuforia = new VuforiaImaging();
-        //vuforia.init();
+    public void initVuforia(HardwareMap hardwareMap, ColorSensor lineDetector) {
+        this.lineDetector = lineDetector;
         color = new ColorImaging(hardwareMap);
         color.init();
         color.setCamera(Cameras.PRIMARY);

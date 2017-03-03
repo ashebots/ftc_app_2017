@@ -23,7 +23,7 @@ public class ButtonTest extends AdvOpMode {
         s.setTicksPer(615);
         c = imuchassismechanum("Left", "Right", "LeftBack", "RightBack", "IMU");
         a = new ModularAuto(sequence, false, c, s, mtr("Accelerator"), mtr("Sweeper"), mtr("topSweep"), 1);
-        a.initVuforia(hardwareMap);
+        a.initVuforia(hardwareMap, hardwareMap.colorSensor.get("Color"));
     }
 
     @Override

@@ -23,7 +23,7 @@ public class rBeacon65 extends AdvOpMode {
         s.setTicksPer(encoderConstant);
         ChassisMechanum c = imuchassismechanum("Left","Right","LeftBack","RightBack","IMU");
         a = new ModularAuto(sequence, false, c,s,mtr("Accelerator"),mtr("Sweeper"),mtr("topSweep"), 2);
-        a.initVuforia(hardwareMap);
+        a.initVuforia(hardwareMap, hardwareMap.colorSensor.get("Color"));
     }
 
     @Override
