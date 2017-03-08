@@ -108,14 +108,14 @@ public class PressButton extends AutoRoutine {
                 }
                 break;
             case (5): //move left
-                chassis.omniDrive(0.75,0);
-                state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>250,7);
-                encTicsToCenter = 250;
+                chassis.omniDrive(-0.75,0);
+                state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>150,7);
+                encTicsToCenter = 150;
                 break;
             case (6): //move left a little (to hit right button
-                chassis.omniDrive(0.75,0);
-                state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>40,7);
-                encTicsToCenter = 40;
+                chassis.omniDrive(-0.75,0);
+                state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>300,7);
+                encTicsToCenter = 300;
                 break;
             case (7): //return to precise angle
                 spd = 0.175;
@@ -128,7 +128,7 @@ public class PressButton extends AutoRoutine {
                 state.state(Math.abs(angleFromPicture)<2,8);
                 break;
             case (8): //press button
-                chassis.setMotors(-1);
+                chassis.setMotors(-0.6);
                 state.state(chassis.aRange(-INF, -foot.s(2)) && !wallBash,9);
                 break;
             case (9): //move back
@@ -136,7 +136,7 @@ public class PressButton extends AutoRoutine {
                 state.state(chassis.aRange(foot.s(1.75), INF),10);
                 break;
             case (10): //recenter
-                chassis.omniDrive(-0.75,0);
+                chassis.omniDrive(0.75,0);
                 if (Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>encTicsToCenter) return true;
                 break;
 
@@ -145,15 +145,15 @@ public class PressButton extends AutoRoutine {
             case (20): //move left
                 chassis.omniDrive(0.75,0);
                 state.state(lineDetector.red()+lineDetector.green()+lineDetector.blue()>120,3); //new
-                state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>150,21);
+                state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>300,21);
                 break;
             case (21): //move right and scan
                 chassis.omniDrive(-0.75,0);
                 //double xPos = 1-(Math.abs(color.beacon.getAnalysis().getCenter().x - 200)/25);
                 //if (xPos < 0) xPos = 0;
                 //centerAlignment.inputData((int)Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff),color.beacon.getAnalysis().isBeaconFound(),xPos,color.beacon.getAnalysis().getConfidence());
-                state.state(lineDetector.red()+lineDetector.green()+lineDetector.blue()>120,3); //new
-                state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>300,23); //changed from 22
+                state.state(lineDetector.red()+lineDetector.green()+lineDetector.blue()>45,3); //new
+                state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>600,23); //changed from 22
                 break;
             case (22): //obsolete
                 encTicsToCenter = 300 - centerAlignment.findCenter();

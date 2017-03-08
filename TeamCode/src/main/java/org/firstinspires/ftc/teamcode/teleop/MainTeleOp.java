@@ -28,6 +28,7 @@ public class MainTeleOp extends AdvOpMode {
     BoolEvent xButton = new BoolEvent();
     BoolEvent yButton = new BoolEvent();
     BoolEvent startButton = new BoolEvent();
+    ColorSensor colorSensor;
 
     boolean accTog;
     boolean frtTog = true;
@@ -40,11 +41,12 @@ public class MainTeleOp extends AdvOpMode {
     public void init() {
         topSweeper = mtr("topSweep");
         lift = mtr("Lift");
-        chassis = imuchassismechanum("Left", "Right", "LeftBack", "RightBack", "IMU");
+        chassis = chassismechanum("Left", "Right", "LeftBack", "RightBack");
         bottomSweeper = mtr("Sweeper");
         accelerator = mtr("Accelerator");
         bottomSweeper.reverse();
         accelerator.setTargetSpeed(900);
+        colorSensor = hardwareMap.colorSensor.get("Color");
     }
 
     @Override
@@ -54,13 +56,13 @@ public class MainTeleOp extends AdvOpMode {
 
     @Override
     public void loop() {
+        telemetry.addData("Color Value",(colorSensor.red()+colorSensor.green()+colorSensor.blue())/3);
         Gamepad gamepad;
         if (gamepadToRead == 1) {
             gamepad = gamepad1;
         } else {
             gamepad = gamepad2;
         }
-        telemetry.addData("Angle",chassis.angle());
         //Speed Mode
         if (xButton.parse(gamepad.x).equals("PRESSED") && gamepadToRead == 1) { //fast
             if (speedMode == 1) {
