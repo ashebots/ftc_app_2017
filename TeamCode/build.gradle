@@ -15,5 +15,5 @@
 apply from: '../build.common.gradle'
 
 android {
-    buildToolsVersion '24'
+    buildToolsVersion '25.0.0'
 }

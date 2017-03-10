@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.auto.test;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.auto.*;
 import org.ashebots.ftcandroidlib.complexOps.*;
 
@@ -18,12 +19,11 @@ public class ButtonTest extends AdvOpMode {
 
     @Override
     public void init() {
-        double[][] sequence = {ModularAuto.LEFT_START, ModularAuto.FAR_THROW, ModularAuto.CLOSE_BEACON, ModularAuto.FAR_BEACON, ModularAuto.RAMP_PARK};
+        double[][] sequence = {ModularAuto.LEFT_START, ModularAuto.FAR_HUB,ModularAuto.CLOSE_BEACON, ModularAuto.FAR_BEACON, ModularAuto.RAMP_PARK};
         Scaler s = new Scaler();
         s.setTicksPer(615);
         c = imuchassismechanum("Left", "Right", "LeftBack", "RightBack", "IMU");
-        a = new ModularAuto(sequence, false, c, s, mtr("Accelerator"), mtr("Sweeper"), mtr("topSweep"), 1);
-        a.initVuforia(hardwareMap, hardwareMap.colorSensor.get("Color"));
+        a = new ModularAuto(sequence, false, c, s, mtr("Accelerator"), mtr("Sweeper"), mtr("topSweep"), 1, hardwareMap);
     }
 
     @Override
