@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.auto.test;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.auto.*;
@@ -10,16 +11,16 @@ import org.ashebots.ftcandroidlib.complexOps.*;
  */
 @Autonomous(name="Button Test",group="Z")
 public class ButtonTest extends AdvOpMode {
-    public ButtonTest() {
+    /*public ButtonTest() {
         msStuckDetectInit = 60000;
-    }
+    }*/
 
     ModularAuto a;
     ChassisMechanum c;
 
     @Override
     public void init() {
-        double[][] sequence = {ModularAuto.LEFT_START, ModularAuto.FAR_HUB,ModularAuto.CLOSE_BEACON, ModularAuto.FAR_BEACON, ModularAuto.RAMP_PARK};
+        double[][] sequence = {ModularAuto.LEFT_START, ModularAuto.FAR_HUB,ModularAuto.CLOSE_BEACON, ModularAuto.FAR_BEACON, ModularAuto.BEACON_THROW, ModularAuto.RAMP_PARK};
         Scaler s = new Scaler();
         s.setTicksPer(615);
         c = imuchassismechanum("Left", "Right", "LeftBack", "RightBack", "IMU");
