@@ -110,12 +110,12 @@ public class PressButton extends AutoRoutine {
                 break;
             case (5): //Left Button
                 chassis.omniDrive(-0.75,0);
-                state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>80,7);
+                state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>90,7);
                 encTicsToCenter = 50;
                 break;
             case (6): //Right Button
                 chassis.omniDrive(-0.75,0);
-                state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>250,7);
+                state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>300,7);
                 encTicsToCenter = 300;
                 break;
             case (7): //return to precise angle
@@ -134,7 +134,7 @@ public class PressButton extends AutoRoutine {
                 break;
             case (9): //move back
                 chassis.setMotors(0.5);
-                state.state(chassis.aRange(foot.s(1.5), INF),10);
+                state.state(chassis.aRange(foot.s(1.75), INF),10);
                 break;
             case (10): //recenter
                 chassis.omniDrive(0.75,0);

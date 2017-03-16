@@ -36,7 +36,6 @@ public class ModularAuto extends AutoRoutine {
     static public double[] CLOSE_BEACON = {2.25,5};
     static public double[] FAR_BEACON = {2.25,9};
     static public double[] BEACON_HUB = {2.5,6.5};
-    static public double[] BEACON_THROW = {3.5,6};
     static public double[] CLOSE_HUB = {6,2};
     static public double[] FAR_HUB = {4,2};
     static public double[] RIGHT_HUB = {8,1.5};
@@ -150,9 +149,6 @@ public class ModularAuto extends AutoRoutine {
         }
         else if (pos[s+1]==ModularAuto.FAR_THROW) {
             special = new ShootBall(chassis, sweeperTop, sweeper, accelerator, 30*reversal, numBalls);
-        }
-        else if (pos[s+1]==ModularAuto.BEACON_THROW) {
-            special = new ShootBall(chassis, sweeperTop, sweeper, accelerator, -30*reversal+90, numBalls);
         }
         else if (pos[s+1]==ModularAuto.CLOSE_PARK) {
             special = new Ball(sweeper, chassis);
