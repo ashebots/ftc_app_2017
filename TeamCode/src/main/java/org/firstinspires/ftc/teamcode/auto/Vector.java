@@ -42,9 +42,9 @@ public class Vector extends AutoRoutine {
         switch (step) {
             case 0:
                 target = chassis.r(angle - chassis.angle()); //target it the angle of the wanted vector
-                double spd = 0.375;
+                double spd = 0.5;
                 if (Math.abs(target) < 50){
-                    spd *= Math.abs(target / 50); //gradual decrease
+                    spd = Math.abs(target / 100); //gradual decrease
                 }
                 if (target<0) {
                     chassis.turnMotors(-spd);
@@ -54,8 +54,8 @@ public class Vector extends AutoRoutine {
                 state.state(Math.abs(target)<5,1);
                 break;
             case 1:
-                spd = 0.75;
-                if (distance-chassis.encoderLeft<foot.s(4)) spd *= (distance-chassis.encoderLeft) / (foot.s(4)); //gradual decrease
+                spd = 1;
+                if (distance-chassis.encoderLeft<foot.s(4)) spd = (distance-chassis.encoderLeft) / (foot.s(4)); //gradual decrease
                 chassis.setMotors(-spd);
                 if (chassis.aRange(distance,INF) || chassis.aRange(-INF, -distance)) {
                     return true;

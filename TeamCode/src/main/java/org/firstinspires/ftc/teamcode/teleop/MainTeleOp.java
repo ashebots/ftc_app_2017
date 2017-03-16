@@ -163,14 +163,10 @@ public class MainTeleOp extends AdvOpMode {
             lift.setMotor(0);
         }
 
-        if (startButton.parse(gamepad1.start||gamepad2.start).equals("PRESSED")) { //switch joysticks
+        if (startButton.parse(gamepad.start).equals("PRESSED")) { //switch joysticks
             if (gamepadToRead == 2) {
                 gamepadToRead = 1;
-                speedMode = 1;
-            } else {
-                gamepadToRead = 2;
-                speedMode = 0;
-            }
+            } else gamepadToRead = 2;
             frtTog = !frtTog;
         }
     }

@@ -16,28 +16,29 @@ import org.opencv.core.Size;
  * Created by apple on 9/15/16.
  */
 public class ModularAuto extends AutoRoutine {
-    public double[][] pos;
-    public Chassis chassis;
-    public Scaler foot;
-    public AdvMotor sweeperTop;
+    double[][] pos;
+    Chassis chassis;
+    Scaler foot;
+    AdvMotor sweeperTop;
     public Vector next;
     public AutoRoutine special;
     public AdvMotor sweeper;
     public AdvMotor accelerator;
-    public boolean blue = false;
+    boolean blue = false;
+    public VuforiaImaging vuforia;
     public ColorImaging color;
-    public int numBalls = 2;
-    public ColorSensor lineDetector;
+    int numBalls = 2;
+    ColorSensor lineDetector;
 
     //COORDINATES in feet
     static public double[] RAMP_PARK = {2, 2}; //gets onto the ramp fully
     static public double[] CLOSE_PARK = {6,5};
     static public double[] FAR_PARK = {5,6};
-    static public double[] CLOSE_BEACON = {2.25,5};
-    static public double[] FAR_BEACON = {2.25,9};
+    static public double[] CLOSE_BEACON = {2.5,5};
+    static public double[] FAR_BEACON = {2.5,9};
     static public double[] BEACON_HUB = {2.5,6.5};
-    static public double[] CLOSE_HUB = {6,2};
-    static public double[] FAR_HUB = {4,2};
+    static public double[] CLOSE_HUB = {6,4};
+    static public double[] FAR_HUB = {4,4};
     static public double[] RIGHT_HUB = {8,1.5};
     static public double[] CLOSE_THROW = {6,3.5};
     static public double[] FAR_THROW = {4,3.5};
@@ -45,8 +46,8 @@ public class ModularAuto extends AutoRoutine {
     static public double[] CENTER_START = {6,0.75};
     static public double[] RIGHT_START = {8,0.75}; //8, 0.75
 
-    public int wait = 0;
-    public Timer timer = new Timer();
+    int wait = 0;
+    Timer timer = new Timer();
 
     public ModularAuto(double[][] position, boolean blue, Chassis c, Scaler s, AdvMotor accelerator, AdvMotor sweeper, AdvMotor sweeperTop, int numBalls) {
         this.sweeperTop = sweeperTop;
@@ -58,37 +59,6 @@ public class ModularAuto extends AutoRoutine {
         this.accelerator = accelerator;
         this.sweeper = sweeper;
         this.numBalls = numBalls;
-        //between calculates the next move. Called between because it runs between each step
-        between();
-    }
-
-    public ModularAuto(double[][] position, boolean blue, Chassis c, Scaler s, AdvMotor accelerator, AdvMotor sweeper, AdvMotor sweeperTop, int numBalls, HardwareMap hardwareMap, int time) {
-        this.sweeperTop = sweeperTop;
-        this.blue = blue;
-        //puts these values in the program
-        pos = position;
-        chassis = c;
-        foot = s;
-        wait = time;
-        this.accelerator = accelerator;
-        this.sweeper = sweeper;
-        this.numBalls = numBalls;
-        initVuforia(hardwareMap, hardwareMap.colorSensor.get("Color"));
-        //between calculates the next move. Called between because it runs between each step
-        between();
-    }
-
-    public ModularAuto(double[][] position, boolean blue, Chassis c, Scaler s, AdvMotor accelerator, AdvMotor sweeper, AdvMotor sweeperTop, int numBalls, HardwareMap hardwareMap) {
-        this.sweeperTop = sweeperTop;
-        this.blue = blue;
-        //puts these values in the program
-        pos = position;
-        chassis = c;
-        foot = s;
-        this.accelerator = accelerator;
-        this.sweeper = sweeper;
-        this.numBalls = numBalls;
-        initVuforia(hardwareMap, hardwareMap.colorSensor.get("Color"));
         //between calculates the next move. Called between because it runs between each step
         between();
     }
@@ -161,7 +131,7 @@ public class ModularAuto extends AutoRoutine {
         }
     }
 
-    public boolean reset = true;
+    boolean reset = true;
 
     @Override
     public boolean states(int step) {
