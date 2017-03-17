@@ -28,20 +28,21 @@ public class ModularAuto extends AutoRoutine {
     public VuforiaImaging vuforia;
     public ColorImaging color;
     int numBalls = 2;
-    ColorSensor lineDetector;
+    public ColorSensor lineDetector;
 
     //COORDINATES in feet
     static public double[] RAMP_PARK = {2, 2}; //gets onto the ramp fully
     static public double[] CLOSE_PARK = {6,5};
     static public double[] FAR_PARK = {5,6};
-    static public double[] CLOSE_BEACON = {2.5,5};
-    static public double[] FAR_BEACON = {2.5,9};
+    static public double[] CLOSE_BEACON = {2,5};
+    static public double[] FAR_BEACON = {2,9};
     static public double[] BEACON_HUB = {2.5,6.5};
-    static public double[] CLOSE_HUB = {6,4};
-    static public double[] FAR_HUB = {4,4};
+    static public double[] CLOSE_HUB = {6,2};
+    static public double[] FAR_HUB = {4,2};
     static public double[] RIGHT_HUB = {8,1.5};
     static public double[] CLOSE_THROW = {6,3.5};
     static public double[] FAR_THROW = {4,3.5};
+    static public double[] BEACON_THROW = {3.5,6};
     static public double[] LEFT_START = {4,0.75};
     static public double[] CENTER_START = {6,0.75};
     static public double[] RIGHT_START = {8,0.75}; //8, 0.75
@@ -78,6 +79,37 @@ public class ModularAuto extends AutoRoutine {
         between();
     }
 
+    public ModularAuto(double[][] position, boolean blue, Chassis c, Scaler s, AdvMotor accelerator, AdvMotor sweeper, AdvMotor sweeperTop, int numBalls, HardwareMap hardwareMap) {
+        this.sweeperTop = sweeperTop;
+        this.blue = blue;
+        //puts these values in the program
+        pos = position;
+        chassis = c;
+        foot = s;
+        this.accelerator = accelerator;
+        this.sweeper = sweeper;
+        this.numBalls = numBalls;
+        initVuforia(hardwareMap, hardwareMap.colorSensor.get("Color"));
+        //between calculates the next move. Called between because it runs between each step
+        between();
+    }
+
+    public ModularAuto(double[][] position, boolean blue, Chassis c, Scaler s, AdvMotor accelerator, AdvMotor sweeper, AdvMotor sweeperTop, int numBalls, HardwareMap hardwareMap, int time) {
+        this.sweeperTop = sweeperTop;
+        this.blue = blue;
+        //puts these values in the program
+        pos = position;
+        chassis = c;
+        foot = s;
+        wait = time;
+        this.accelerator = accelerator;
+        this.sweeper = sweeper;
+        this.numBalls = numBalls;
+        initVuforia(hardwareMap, hardwareMap.colorSensor.get("Color"));
+        //between calculates the next move. Called between because it runs between each step
+        between();
+    }
+
     @Override
     public void stop() {
         next.stop();
@@ -105,20 +137,23 @@ public class ModularAuto extends AutoRoutine {
             if (blue) {
                 beacon = 0;
             }
-            special = new PressButton(chassis, foot, beacon, blue, false, color, lineDetector);
+            special = new PressButton(chassis, foot, beacon, blue, color, lineDetector);
         }
         else if (pos[s+1]==ModularAuto.FAR_BEACON) {
             int beacon = 1;
             if (blue) {
                 beacon = 2;
             }
-            special = new PressButton(chassis, foot, beacon, blue, true, color, lineDetector);
+            special = new PressButton(chassis, foot, beacon, blue, color, lineDetector);
         }
         else if (pos[s+1]==ModularAuto.CLOSE_THROW) {
             special = new ShootBall(chassis, sweeperTop, sweeper, accelerator, -30*reversal, numBalls);
         }
         else if (pos[s+1]==ModularAuto.FAR_THROW) {
             special = new ShootBall(chassis, sweeperTop, sweeper, accelerator, 30*reversal, numBalls);
+        }
+        else if (pos[s+1]==ModularAuto.BEACON_THROW) {
+            special = new ShootBall(chassis, sweeperTop, sweeper, accelerator, 120*reversal, numBalls);
         }
         else if (pos[s+1]==ModularAuto.CLOSE_PARK) {
             special = new Ball(sweeper, chassis);

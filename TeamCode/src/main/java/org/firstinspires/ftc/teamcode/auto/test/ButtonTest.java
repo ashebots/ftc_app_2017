@@ -18,17 +18,18 @@ public class ButtonTest extends AdvOpMode {
 
     @Override
     public void init() {
-        double[][] sequence = {ModularAuto.LEFT_START, ModularAuto.FAR_THROW, ModularAuto.CLOSE_BEACON, ModularAuto.FAR_BEACON, ModularAuto.RAMP_PARK};
+        double[][] sequence = {ModularAuto.LEFT_START, ModularAuto.FAR_HUB, ModularAuto.CLOSE_BEACON, ModularAuto.FAR_BEACON, ModularAuto.BEACON_THROW, ModularAuto.RAMP_PARK};
         Scaler s = new Scaler();
         s.setTicksPer(615);
         c = imuchassismechanum("Left", "Right", "LeftBack", "RightBack", "IMU");
-        a = new ModularAuto(sequence, false, c, s, mtr("Accelerator"), mtr("Sweeper"), mtr("topSweep"), 1);
-        a.initVuforia(hardwareMap, hardwareMap.colorSensor.get("Color"));
+        a = new ModularAuto(sequence, false, c, s, mtr("Accelerator"), mtr("Sweeper"), mtr("topSweep"), 1, hardwareMap);
     }
 
     @Override
     public void loop() {
         a.run();
+        telemetry.addData("Beacon",a.color.beacon.getAnalysis().getColorString());
+        telemetry.addData("Line",a.lineDetector.red()+a.lineDetector.green()+a.lineDetector.blue());
     }
 
     @Override

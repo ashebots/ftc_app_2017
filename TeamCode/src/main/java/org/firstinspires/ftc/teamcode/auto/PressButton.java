@@ -28,16 +28,13 @@ public class PressButton extends AutoRoutine {
 
     CenterAlignment centerAlignment = new CenterAlignment();
 
-    public boolean wallBash = false; // on second beacon, keep moving forward to make sure you press button (we won't have time to do anything else)
-
-    public PressButton(Chassis c, Scaler s, int t, boolean isBlue, boolean wallBash, ColorImaging color, ColorSensor lineDetector) {
+    public PressButton(Chassis c, Scaler s, int t, boolean isBlue, ColorImaging color, ColorSensor lineDetector) {
         chassis = c;
         foot = s;
         target = t;
         colorEqualsBlue = isBlue;
         this.lineDetector = lineDetector;
         this.color = color;
-        this.wallBash = wallBash;
     }
 
     @Override
@@ -67,31 +64,21 @@ public class PressButton extends AutoRoutine {
                 state.state(Math.abs(angle)<5,1);
                 break;
             case (1): //turn to precise angle
-                double spd = 0.175;
-                if (Math.abs(angleFromPicture) < 20) spd = Math.abs(angleFromPicture) / 100 * 0.875;
+                double spd = 0.2;
+                if (Math.abs(angleFromPicture) < 20) spd = Math.abs(angleFromPicture) / 100;
                 if (angleFromPicture<0) { //which angle to turn
                     chassis.turnMotors(-spd);
                 } else {
                     chassis.turnMotors(spd);
                 }
-                state.state(Math.abs(angleFromPicture)<2,20); //jumps to 20 instead of 2 for now
+                state.state(Math.abs(angleFromPicture)<2,2);
                 break;
-            case (2): //move to center line
-                if (distanceToSide < 0) {
-                    chassis.omniDrive(-0.75,0);
-                } else {
-                    chassis.omniDrive(0.75,0);
-                }
-                state.state(Math.abs(distanceToSide)<8,3);
-                break;
-                /*if (distanceToSide<0) { //move onto the line (forward or back)
-                    chassis.omniDrive(0.7,0);
-                } else if (distanceToSide>0) chassis.omniDrive(-0.7,0);
-                state.state(Math.abs(distanceToSide)<20 && distanceToSide != 0,3);
-                break;*/
+            case (2): //move forward to be close to white line
+                chassis.setMotors(-0.6);
+                state.state(chassis.aRange(-INF, -foot.s(0.25)),20);
             case (3): //turn to precise angle (VUF)
-                spd = 0.175;
-                if (Math.abs(angleFromPicture) < 20) spd = Math.abs(angleFromPicture) / 100 * 0.875;
+                spd = 0.2;
+                if (Math.abs(angleFromPicture) < 20) spd = Math.abs(angleFromPicture) / 100;
                 if (angleFromPicture<0) { //which angle to turn
                     chassis.turnMotors(-spd);
                 } else {
@@ -104,22 +91,22 @@ public class PressButton extends AutoRoutine {
                 if (isBlueOnLeft ^ colorEqualsBlue) {
                     state.state(true, 6); //one's true, one's false, therefore, our color is not on the left
                 } else {
-                    state.state(true, 5); //both are the same, therefore, our color is on the left
+                    state.state(true, 8); //both are the same, therefore, our color is on the left
                 }
                 break;
-            case (5): //move left
+            case (5): //left (unused, it will hit anyway)
                 chassis.omniDrive(-0.75,0);
-                state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>150,7);
-                encTicsToCenter = 150;
+                state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>80,7);
+                encTicsToCenter = 80;
                 break;
-            case (6): //move left a little (to hit right button
+            case (6): //right
                 chassis.omniDrive(-0.75,0);
-                state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>300,7);
-                encTicsToCenter = 300;
+                state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>250,7);
+                encTicsToCenter = 250;
                 break;
             case (7): //return to precise angle
-                spd = 0.175;
-                if (Math.abs(angleFromPicture) < 20) spd = Math.abs(angleFromPicture) / 100 * 0.875;
+                spd = 0.2;
+                if (Math.abs(angleFromPicture) < 20) spd = Math.abs(angleFromPicture) / 100;
                 if (angleFromPicture<0) { //which angle to turn
                     chassis.turnMotors(-spd);
                 } else {
@@ -129,11 +116,11 @@ public class PressButton extends AutoRoutine {
                 break;
             case (8): //press button
                 chassis.setMotors(-0.6);
-                state.state(chassis.aRange(-INF, -foot.s(2)) && !wallBash,9);
+                state.state(chassis.aRange(-INF, -foot.s(2)),9);
                 break;
             case (9): //move back
                 chassis.setMotors(0.5);
-                state.state(chassis.aRange(foot.s(1.75), INF),10);
+                state.state(chassis.aRange(foot.s(1.25), INF),10);
                 break;
             case (10): //recenter
                 chassis.omniDrive(0.75,0);
@@ -144,7 +131,8 @@ public class PressButton extends AutoRoutine {
             //NEW CODE: THIS CAN BE EASILY DISCONNECTED FROM THE PROGRAM
             case (20): //move left
                 chassis.omniDrive(0.75,0);
-                state.state(lineDetector.red()+lineDetector.green()+lineDetector.blue()>120,3); //new
+
+                state.state(lineDetector.red()+lineDetector.green()+lineDetector.blue()>20,3); //new
                 state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>300,21);
                 break;
             case (21): //move right and scan
@@ -152,7 +140,7 @@ public class PressButton extends AutoRoutine {
                 //double xPos = 1-(Math.abs(color.beacon.getAnalysis().getCenter().x - 200)/25);
                 //if (xPos < 0) xPos = 0;
                 //centerAlignment.inputData((int)Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff),color.beacon.getAnalysis().isBeaconFound(),xPos,color.beacon.getAnalysis().getConfidence());
-                state.state(lineDetector.red()+lineDetector.green()+lineDetector.blue()>45,3); //new
+                state.state(lineDetector.red()+lineDetector.green()+lineDetector.blue()>20,3); //new
                 state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>600,23); //changed from 22
                 break;
             case (22): //obsolete
@@ -161,7 +149,7 @@ public class PressButton extends AutoRoutine {
                 break;
             case (23): //move left
                 chassis.omniDrive(0.75,0);
-                state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>150,3); //150 was encticstocenter
+                state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>300,3); //150 was encticstocenter
                 break;
         }
         return false;
@@ -176,5 +164,18 @@ public class PressButton extends AutoRoutine {
         chassis.stop();
         chassis.resetEncs();
         timer.resetTimer();
+    }
+
+    public void sideMove(int dir, double angleFromPicture) {
+        double trnspd = 0.175;
+        if (Math.abs(angleFromPicture) < 20) trnspd = Math.abs(angleFromPicture) / 100 * 0.875;
+        if (angleFromPicture<0) { //which angle to turn
+            trnspd *= -1;
+        }
+
+        chassis.motorLeft.setPower(dir*0.2+trnspd);
+        chassis.motorRight.setPower(-dir*0.2-trnspd);
+        chassis.motorLeftB.setPower(-dir*0.53+trnspd);
+        chassis.motorRightB.setPower(dir*0.53-trnspd);
     }
 }
