@@ -10,20 +10,22 @@ import org.firstinspires.ftc.teamcode.auto.ModularAuto;
 /**
  * Created by apple on 9/17/16.
  */
-@Autonomous(name="BlueR 2S 1B C [70*]", group="K")
-public class bBeacon70 extends AdvOpMode {
-    public bBeacon70() {
+@Autonomous(name="[Blue] Shooting RM 25/40",group="F")
+public class ShootingRM2540 extends AdvOpMode {
+    public ShootingRM2540() {
         msStuckDetectInit = 60000;
     }
+
     ModularAuto a;
+    ChassisMechanum c;
+
     @Override
     public void init() {
-        double[][] sequence = {ModularAuto.LEFT_START,ModularAuto.FAR_THROW,ModularAuto.CLOSE_BEACON,ModularAuto.BEACON_HUB,ModularAuto.CLOSE_PARK};
+        double[][] sequence = {ModularAuto.LEFT_START, ModularAuto.FAR_THROW, ModularAuto.CLOSE_PARK};
         Scaler s = new Scaler();
         s.setTicksPer(encoderConstant);
-        ChassisMechanum c = imuchassismechanum("Left","Right","LeftBack","RightBack","IMU");
-        a = new ModularAuto(sequence, true, c,s,mtr("Accelerator"),mtr("Sweeper"),mtr("topSweep"), 2);
-        a.initVuforia(hardwareMap, hardwareMap.colorSensor.get("Color"));
+        c = imuchassismechanum("Left", "Right", "LeftBack", "RightBack", "IMU");
+        a = new ModularAuto(sequence, true, c, s, mtr("Accelerator"), mtr("Sweeper"), mtr("topSweep"), 2, 10000);
     }
 
     @Override

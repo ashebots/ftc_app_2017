@@ -10,19 +10,22 @@ import org.firstinspires.ftc.teamcode.auto.ModularAuto;
 /**
  * Created by apple on 9/17/16.
  */
-@Autonomous(name="RedR 1S C [25]", group="H")
-public class rCenter25 extends AdvOpMode {
-    public rCenter25() {
+@Autonomous(name="[Red] Buttons 85",group="A")
+public class Buttons85 extends AdvOpMode {
+    public Buttons85() {
         msStuckDetectInit = 60000;
     }
+
     ModularAuto a;
+    ChassisMechanum c;
+
     @Override
     public void init() {
-        double[][] sequence = {ModularAuto.RIGHT_START,ModularAuto.RIGHT_HUB,ModularAuto.CLOSE_THROW,ModularAuto.CLOSE_PARK};
+        double[][] sequence = {ModularAuto.LEFT_START, ModularAuto.FAR_HUB, ModularAuto.CLOSE_BEACON, ModularAuto.FAR_BEACON, ModularAuto.BEACON_THROW, ModularAuto.CLOSE_PARK};
         Scaler s = new Scaler();
         s.setTicksPer(encoderConstant);
-        ChassisMechanum c = imuchassismechanum("Left","Right","LeftBack","RightBack","IMU");
-        a = new ModularAuto(sequence, false, c,s,mtr("Accelerator"),mtr("Sweeper"),mtr("topSweep"), 1, 7500);
+        c = imuchassismechanum("Left", "Right", "LeftBack", "RightBack", "IMU");
+        a = new ModularAuto(sequence, false, c, s, mtr("Accelerator"), mtr("Sweeper"), mtr("topSweep"), 1, hardwareMap);
     }
 
     @Override
