@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.opmodes.blue;
+package org.firstinspires.ftc.teamcode.auto.opmodes.red;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -10,19 +10,22 @@ import org.firstinspires.ftc.teamcode.auto.ModularAuto;
 /**
  * Created by apple on 9/17/16.
  */
-@Autonomous(name="BlueL 2S C [40]", group="N")
-public class bCenter40 extends AdvOpMode {
-    public bCenter40() {
+@Autonomous(name="[Red] Shooting CR 25/40",group="E")
+public class ShootingCR2540 extends AdvOpMode {
+    public ShootingCR2540() {
         msStuckDetectInit = 60000;
     }
+
     ModularAuto a;
+    ChassisMechanum c;
+
     @Override
     public void init() {
-        double[][] sequence = {ModularAuto.RIGHT_START,ModularAuto.RIGHT_HUB,ModularAuto.CLOSE_THROW,ModularAuto.CLOSE_PARK};
+        double[][] sequence = {ModularAuto.RIGHT_START, ModularAuto.RIGHT_HUB, ModularAuto.CLOSE_THROW, ModularAuto.CLOSE_PARK};
         Scaler s = new Scaler();
         s.setTicksPer(encoderConstant);
-        ChassisMechanum c = imuchassismechanum("Left","Right","LeftBack","RightBack","IMU");
-        a = new ModularAuto(sequence, true, c,s,mtr("Accelerator"),mtr("Sweeper"),mtr("topSweep"), 2, 7500);
+        c = imuchassismechanum("Left", "Right", "LeftBack", "RightBack", "IMU");
+        a = new ModularAuto(sequence, false, c, s, mtr("Accelerator"), mtr("Sweeper"), mtr("topSweep"), 2, 10000);
     }
 
     @Override
