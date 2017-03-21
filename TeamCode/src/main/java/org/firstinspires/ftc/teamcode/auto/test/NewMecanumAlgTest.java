@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.auto.test;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 import org.ashebots.ftcandroidlib.complexOps.AdvOpMode;
 import org.ashebots.ftcandroidlib.complexOps.Chassis;
 
 /**
  * Created by secretbuilder00 on 3/19/2017.
  */
-
+@Autonomous(name = "DriveTest", group = "Z")
 public class NewMecanumAlgTest extends AdvOpMode  {
     Chassis chassis;
     double Angle; //Angle you want the robot to turn to
