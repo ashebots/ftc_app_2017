@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.auto.ModularAuto;
 /**
  * Created by apple on 9/17/16.
  */
-@Autonomous(name="[Red] Shooting CR 25/40",group="G")
+@Autonomous(name="[Red] Shooting CR 20/35",group="G")
 public class ShootingCR2035 extends AdvOpMode {
     public ShootingCR2035() {
         msStuckDetectInit = 60000;
