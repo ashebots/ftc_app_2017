@@ -16,6 +16,9 @@ import org.opencv.core.Size;
  * Created by apple on 9/15/16.
  */
 public class ModularAuto extends AutoRoutine {
+    double posXafterSpecial;
+    double posYafterSpecial;
+
     double[][] pos;
     Chassis chassis;
     Scaler foot;
@@ -34,15 +37,15 @@ public class ModularAuto extends AutoRoutine {
     static public double[] RAMP_PARK = {2, 2}; //gets onto the ramp fully
     static public double[] CLOSE_PARK = {6,5};
     static public double[] FAR_PARK = {5,6};
-    static public double[] CLOSE_BEACON = {2,5};
-    static public double[] FAR_BEACON = {2,9};
+    static public double[] CLOSE_BEACON = {2,4.5};
+    static public double[] FAR_BEACON = {2,8.5};
     static public double[] BEACON_HUB = {2.5,6.5};
     static public double[] CLOSE_HUB = {6,2};
     static public double[] FAR_HUB = {4,2};
     static public double[] RIGHT_HUB = {8,1.5};
-    static public double[] CLOSE_THROW = {6,3.5};
-    static public double[] FAR_THROW = {4,3.5};
-    static public double[] BEACON_THROW = {3.5,6};
+    static public double[] CLOSE_THROW = {6,2.55};
+    static public double[] FAR_THROW = {4,2.55};
+    static public double[] BEACON_THROW = {2.55,6};
     static public double[] LEFT_START = {4,0.75};
     static public double[] CENTER_START = {6,0.75};
     static public double[] RIGHT_START = {8,0.75}; //8, 0.75
@@ -61,6 +64,8 @@ public class ModularAuto extends AutoRoutine {
         this.sweeper = sweeper;
         this.numBalls = numBalls;
         //between calculates the next move. Called between because it runs between each step
+        posXafterSpecial = pos[0][0];
+        posYafterSpecial = pos[0][1];
         between();
     }
 
@@ -76,6 +81,8 @@ public class ModularAuto extends AutoRoutine {
         this.sweeper = sweeper;
         this.numBalls = numBalls;
         //between calculates the next move. Called between because it runs between each step
+        posXafterSpecial = pos[0][0];
+        posYafterSpecial = pos[0][1];
         between();
     }
 
@@ -91,6 +98,8 @@ public class ModularAuto extends AutoRoutine {
         this.numBalls = numBalls;
         initVuforia(hardwareMap, hardwareMap.colorSensor.get("Color"));
         //between calculates the next move. Called between because it runs between each step
+        posXafterSpecial = pos[0][0];
+        posYafterSpecial = pos[0][1];
         between();
     }
 
@@ -107,6 +116,8 @@ public class ModularAuto extends AutoRoutine {
         this.numBalls = numBalls;
         initVuforia(hardwareMap, hardwareMap.colorSensor.get("Color"));
         //between calculates the next move. Called between because it runs between each step
+        posXafterSpecial = pos[0][0];
+        posYafterSpecial = pos[0][1];
         between();
     }
 
@@ -124,36 +135,37 @@ public class ModularAuto extends AutoRoutine {
     public void between() {
         int reversal = 1; //for blue throw angle switch
         int s = getStep();
+        double x1 = posXafterSpecial;
+        double y1 = posYafterSpecial;
+        double x2 = posXafterSpecial = pos[s+1][0];
+        double y2 = posYafterSpecial = pos[s+1][1];
         if (blue) { //switch
-            next = new Vector(12 - pos[s][0], pos[s][1], 12 - pos[s + 1][0], pos[s + 1][1], foot, chassis); //blue
+            next = new Vector(12 - x1, y1, 12 - x2, y2, foot, chassis); //blue
             reversal = -1;
-        } else next = new Vector(pos[s][0],pos[s][1],pos[s+1][0],pos[s+1][1],foot,chassis); //red
+        } else next = new Vector(x1,y1,x2,y2,foot,chassis); //red
 
         if (pos[s+1]==ModularAuto.RAMP_PARK) {
             special = new Ramp(chassis, blue);
         }
         else if (pos[s+1]==ModularAuto.CLOSE_BEACON) {
-            int beacon = 3;
-            if (blue) {
-                beacon = 0;
-            }
-            special = new PressButton(chassis, foot, beacon, blue, color, lineDetector);
+            special = new PressButton2(chassis, foot, 0, blue, color, lineDetector);
+            posYafterSpecial += 0.5;
         }
         else if (pos[s+1]==ModularAuto.FAR_BEACON) {
-            int beacon = 1;
-            if (blue) {
-                beacon = 2;
-            }
-            special = new PressButton(chassis, foot, beacon, blue, color, lineDetector);
+            special = new PressButton2(chassis, foot, 1, blue, color, lineDetector);
+            posYafterSpecial += 0.5;
         }
         else if (pos[s+1]==ModularAuto.CLOSE_THROW) {
-            special = new ShootBall(chassis, sweeperTop, sweeper, accelerator, -30*reversal, numBalls);
+            special = new ShootBall(chassis, sweeperTop, sweeper, accelerator, -23*reversal, numBalls);
+            accelerator.setMotor(0.2);
         }
         else if (pos[s+1]==ModularAuto.FAR_THROW) {
-            special = new ShootBall(chassis, sweeperTop, sweeper, accelerator, 30*reversal, numBalls);
+            special = new ShootBall(chassis, sweeperTop, sweeper, accelerator, 23*reversal, numBalls);
+            accelerator.setMotor(0.2);
         }
         else if (pos[s+1]==ModularAuto.BEACON_THROW) {
             special = new ShootBall(chassis, sweeperTop, sweeper, accelerator, 120*reversal, numBalls);
+            accelerator.setMotor(0.2);
         }
         else if (pos[s+1]==ModularAuto.CLOSE_PARK) {
             special = new Ball(sweeper, chassis);

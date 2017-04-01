@@ -11,7 +11,7 @@ import org.ashebots.ftcandroidlib.complexOps.*;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.lasarobotics.vision.opmode.ColorImaging;
 
-public class PressButton extends AutoRoutine {
+public class PressButton2 extends AutoRoutine {
     Chassis chassis;
     VuforiaImaging vuforia;
     ColorImaging color;
@@ -28,7 +28,7 @@ public class PressButton extends AutoRoutine {
 
     CenterAlignment centerAlignment = new CenterAlignment();
 
-    public PressButton(Chassis c, Scaler s, int t, boolean isBlue, ColorImaging color, ColorSensor lineDetector) {
+    public PressButton2(Chassis c, Scaler s, int t, boolean isBlue, ColorImaging color, ColorSensor lineDetector) {
         chassis = c;
         foot = s;
         target = t;
@@ -73,11 +73,11 @@ public class PressButton extends AutoRoutine {
                 }
                 state.state(Math.abs(angleFromPicture)<2,2);
                 break;
-            case (2): //move forward to be close to white line
-                chassis.setMotors(-0.6);
-                state.state(chassis.aRange(-INF, -foot.s(0.25 + (target*0.25))),20);
+            case (2): //move forward to align with wall
+                chassis.setMotors(-0.4);
+                state.state(chassis.aRange(-INF, -foot.s(2.25)),20);
                 break;
-            case (3): //turn to precise angle (VUF)
+            case (3): //turn to precise angle
                 spd = 0.2;
                 if (Math.abs(angleFromPicture) < 20) spd = Math.abs(angleFromPicture) / 100;
                 if (angleFromPicture<0) { //which angle to turn
@@ -102,8 +102,8 @@ public class PressButton extends AutoRoutine {
                 break;
             case (6): //right
                 chassis.omniDrive(-0.75,0);
-                state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>175,7);
-                encTicsToCenter = 175;
+                state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>150,7);
+                encTicsToCenter = 150;
                 break;
             case (7): //return to precise angle
                 spd = 0.2;
@@ -116,12 +116,12 @@ public class PressButton extends AutoRoutine {
                 state.state(Math.abs(angleFromPicture)<2,8);
                 break;
             case (8): //press button
-                chassis.setMotors(-0.6);
+                chassis.setMotors(-0.4);
                 state.state(chassis.aRange(-INF, -foot.s(2)),9);
                 break;
             case (9): //move back
                 chassis.setMotors(0.5);
-                state.state(chassis.aRange(foot.s(1.25), INF),10);
+                state.state(chassis.aRange(foot.s(1.15), INF),10);
                 break;
             case (10): //recenter
                 chassis.omniDrive(0.75,0);
@@ -130,24 +130,33 @@ public class PressButton extends AutoRoutine {
 
 
             //NEW CODE: THIS CAN BE EASILY DISCONNECTED FROM THE PROGRAM
-            case (20): //move left
-                chassis.omniDrive(0.75,0);
-                state.state(lineDetector.red()+lineDetector.green()+lineDetector.blue()>20,3); //new
-                state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>300,21);
+            case (20): //move back a little
+                chassis.setMotors(0.35);
+                state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>foot.s(1.25),21);
                 break;
-            case (21): //move right and scan
-                chassis.omniDrive(-0.75,0);
-                //double xPos = 1-(Math.abs(color.beacon.getAnalysis().getCenter().x - 200)/25);
-                //if (xPos < 0) xPos = 0;
-                //centerAlignment.inputData((int)Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff),color.beacon.getAnalysis().isBeaconFound(),xPos,color.beacon.getAnalysis().getConfidence());
-                state.state(lineDetector.red()+lineDetector.green()+lineDetector.blue()>20,3); //new
-                state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>600,23); //changed from 22
+            case (21): //turn to precise angle
+                spd = 0.2;
+                if (Math.abs(angleFromPicture) < 20) spd = Math.abs(angleFromPicture) / 100;
+                if (angleFromPicture<0) { //which angle to turn
+                    chassis.turnMotors(-spd);
+                } else {
+                    chassis.turnMotors(spd);
+                }
+                state.state(Math.abs(angleFromPicture)<2,22);
                 break;
-            case (22): //obsolete
+            case (22): //move to line and scan
+                if (colorEqualsBlue) {
+                    chassis.omniDrive(0.75,0);
+                } else {
+                    chassis.omniDrive(-0.75,0);
+                }
+                state.state(lineDetector.red()+lineDetector.green()+lineDetector.blue()>20,3); //new
+                break;
+            case (23): //obsolete
                 encTicsToCenter = 300 - centerAlignment.findCenter();
                 state.state(timer.tRange(1500),23);
                 break;
-            case (23): //move left
+            case (24): //obsolete
                 chassis.omniDrive(0.75,0);
                 state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>300,3); //150 was encticstocenter
                 break;

@@ -31,6 +31,10 @@ public class Buttons97 extends AdvOpMode {
     @Override
     public void loop() {
         a.run();
+        if (a.special!=null) {
+            telemetry.addData("State",a.special.getStep());
+        }
+        telemetry.addData("Line",a.lineDetector.red()+a.lineDetector.green()+a.lineDetector.blue());
     }
 
     @Override
