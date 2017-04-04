@@ -10,9 +10,9 @@ import org.firstinspires.ftc.teamcode.auto.ModularAuto;
 /**
  * Created by apple on 9/17/16.
  */
-@Autonomous(name="[Red] Buttons 97",group="C")
-public class Buttons97 extends AdvOpMode {
-    public Buttons97() {
+@Autonomous(name="[Red-Left] Beacons NoShoot Center",group="C")
+public class RedLeftBeaconsNoShootCenter extends AdvOpMode {
+    public RedLeftBeaconsNoShootCenter() {
         msStuckDetectInit = 60000;
     }
 
@@ -25,7 +25,7 @@ public class Buttons97 extends AdvOpMode {
         Scaler s = new Scaler();
         s.setTicksPer(encoderConstant);
         c = imuchassismechanum("Left", "Right", "LeftBack", "RightBack", "IMU");
-        a = new ModularAuto(sequence, false, c, s, mtr("Accelerator"), mtr("Sweeper"), mtr("topSweep"), 2, hardwareMap);
+        a = new ModularAuto(sequence, false, c, s, mtr("Accelerator"), mtr("Sweeper"), mtr("topSweep"), 0, hardwareMap);
     }
 
     @Override
