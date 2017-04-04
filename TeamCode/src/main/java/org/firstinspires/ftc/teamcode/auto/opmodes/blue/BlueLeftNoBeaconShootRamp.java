@@ -10,9 +10,9 @@ import org.firstinspires.ftc.teamcode.auto.ModularAuto;
 /**
  * Created by apple on 9/17/16.
  */
-@Autonomous(name="[Blue] Shooting CR 20/35",group="G")
-public class ShootingCR2035 extends AdvOpMode {
-    public ShootingCR2035() {
+@Autonomous(name="[Blue-Left] NoBeacon Shoot Ramp",group="G")
+public class BlueLeftNoBeaconShootRamp extends AdvOpMode {
+    public BlueLeftNoBeaconShootRamp() {
         msStuckDetectInit = 60000;
     }
 

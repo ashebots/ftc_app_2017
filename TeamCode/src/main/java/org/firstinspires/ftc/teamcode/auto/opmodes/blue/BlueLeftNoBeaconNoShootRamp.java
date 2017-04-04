@@ -10,9 +10,9 @@ import org.firstinspires.ftc.teamcode.auto.ModularAuto;
 /**
  * Created by apple on 9/17/16.
  */
-@Autonomous(name="[Blue] Buttons 97",group="C")
-public class Buttons97 extends AdvOpMode {
-    public Buttons97() {
+@Autonomous(name="[Blue-Left] NoBeacon Shoot Ramp",group="G")
+public class BlueLeftNoBeaconNoShootRamp extends AdvOpMode {
+    public BlueLeftNoBeaconNoShootRamp() {
         msStuckDetectInit = 60000;
     }
 
@@ -21,20 +21,16 @@ public class Buttons97 extends AdvOpMode {
 
     @Override
     public void init() {
-        double[][] sequence = {ModularAuto.LEFT_START, ModularAuto.FAR_HUB, ModularAuto.CLOSE_BEACON, ModularAuto.FAR_BEACON, ModularAuto.BEACON_THROW, ModularAuto.CLOSE_PARK};
+        double[][] sequence = {ModularAuto.RIGHT_START, ModularAuto.RIGHT_HUB, ModularAuto.CLOSE_THROW, ModularAuto.RAMP_PARK};
         Scaler s = new Scaler();
         s.setTicksPer(encoderConstant);
         c = imuchassismechanum("Left", "Right", "LeftBack", "RightBack", "IMU");
-        a = new ModularAuto(sequence, true, c, s, mtr("Accelerator"), mtr("Sweeper"), mtr("topSweep"), 2, hardwareMap);
+        a = new ModularAuto(sequence, true, c, s, mtr("Accelerator"), mtr("Sweeper"), mtr("topSweep"), 0, 10000);
     }
 
     @Override
     public void loop() {
         a.run();
-        if (a.special!=null) {
-            telemetry.addData("State",a.special.getStep());
-        }
-        telemetry.addData("Line",a.lineDetector.red()+a.lineDetector.green()+a.lineDetector.blue());
     }
 
     @Override
