@@ -34,7 +34,7 @@ public class RedLeftBeaconsShootCenter extends AdvOpMode {
         if (a.special!=null) {
             telemetry.addData("State",a.special.getStep());
         }
-        telemetry.addData("Line",a.lineDetector.red()+a.lineDetector.green()+a.lineDetector.blue());
+        telemetry.addData("IMU",c.angle());
     }
 
     @Override

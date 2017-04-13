@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.auto.ModularAuto;
 /**
  * Created by apple on 9/17/16.
  */
-@Autonomous(name="[Blue-Right] Beacon Shoot Stop",group="B")
+@Autonomous(name="[Blue-Right] Beacon NoShoot Stop",group="B")
 public class BlueRightBeaconNoShootStop extends AdvOpMode {
     public BlueRightBeaconNoShootStop() {
         msStuckDetectInit = 60000;

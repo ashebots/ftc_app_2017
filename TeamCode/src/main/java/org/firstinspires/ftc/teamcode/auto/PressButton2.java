@@ -51,11 +51,11 @@ public class PressButton2 extends AutoRoutine {
         if (color.beacon.getAnalysis().getConfidence()<0.2) {
             distanceToSide = -angle;
         }
-        double angleFromPicture = chassis.r(angle - chassis.angle());
+        double angleFromBeacon = chassis.r(angle - chassis.angle());
         //State Machine
         switch (step) {
             case (0): //turn to approx angle
-                angle = angleFromPicture; //angle difference
+                angle = angleFromBeacon; //angle difference
                 if (angle<0) { //which angle to turn
                     chassis.turnMotors(-0.3);
                 } else {
@@ -65,13 +65,17 @@ public class PressButton2 extends AutoRoutine {
                 break;
             case (1): //turn to precise angle
                 double spd = 0.2;
-                if (Math.abs(angleFromPicture) < 20) spd = Math.abs(angleFromPicture) / 100;
-                if (angleFromPicture<0) { //which angle to turn
+                if (Math.abs(angleFromBeacon) < 20) spd = Math.abs(angleFromBeacon) / 100;
+                if (angleFromBeacon<0) { //which angle to turn
                     chassis.turnMotors(-spd);
                 } else {
                     chassis.turnMotors(spd);
                 }
-                state.state(Math.abs(angleFromPicture)<2,2);
+                if (target==1) {
+                    state.state(Math.abs(angleFromBeacon)<2,2);
+                } else {
+                    state.state(Math.abs(angleFromBeacon)<2,22);
+                }
                 break;
             case (2): //move forward to align with wall
                 chassis.setMotors(-0.4);
@@ -79,16 +83,21 @@ public class PressButton2 extends AutoRoutine {
                 break;
             case (3): //turn to precise angle
                 spd = 0.2;
-                if (Math.abs(angleFromPicture) < 20) spd = Math.abs(angleFromPicture) / 100;
-                if (angleFromPicture<0) { //which angle to turn
+                if (Math.abs(angleFromBeacon) < 20) spd = Math.abs(angleFromBeacon) / 100;
+                if (angleFromBeacon<0) { //which angle to turn
                     chassis.turnMotors(-spd);
                 } else {
                     chassis.turnMotors(spd);
                 }
-                state.state(Math.abs(angleFromPicture)<2,4);
+                state.state(Math.abs(angleFromBeacon)<2,4);
                 break;
             case (4): //scan
                 boolean isBlueOnLeft = color.beacon.getAnalysis().isLeftBlue();
+                boolean isBlueOnRight = color.beacon.getAnalysis().isRightBlue();
+
+                if (isBlueOnLeft == isBlueOnRight && isBlueOnLeft == colorEqualsBlue) {
+                    return true;
+                }
                 if (isBlueOnLeft ^ colorEqualsBlue) {
                     state.state(true, 6); //one's true, one's false, therefore, our color is not on the left
                 } else {
@@ -107,13 +116,13 @@ public class PressButton2 extends AutoRoutine {
                 break;
             case (7): //return to precise angle
                 spd = 0.2;
-                if (Math.abs(angleFromPicture) < 20) spd = Math.abs(angleFromPicture) / 100;
-                if (angleFromPicture<0) { //which angle to turn
+                if (Math.abs(angleFromBeacon) < 20) spd = Math.abs(angleFromBeacon) / 100;
+                if (angleFromBeacon<0) { //which angle to turn
                     chassis.turnMotors(-spd);
                 } else {
                     chassis.turnMotors(spd);
                 }
-                state.state(Math.abs(angleFromPicture)<2,8);
+                state.state(Math.abs(angleFromBeacon)<2,8);
                 break;
             case (8): //press button
                 chassis.setMotors(-0.4);
@@ -125,9 +134,19 @@ public class PressButton2 extends AutoRoutine {
                 break;
             case (10): //recenter
                 chassis.omniDrive(0.75,0);
-                if (Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>encTicsToCenter) return true;
+                state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>encTicsToCenter,11);
                 break;
-
+            case (11): //correct
+                isBlueOnLeft = color.beacon.getAnalysis().isLeftBlue();
+                isBlueOnRight = color.beacon.getAnalysis().isRightBlue();
+                if (isBlueOnLeft == isBlueOnRight && isBlueOnLeft != colorEqualsBlue) {
+                    //wrong
+                    encTicsToCenter = 0;
+                    state.state(timer.tRange(4000),8);
+                } else {
+                    return true; //right (or we missed and give up)
+                }
+                break;
 
             //NEW CODE: THIS CAN BE EASILY DISCONNECTED FROM THE PROGRAM
             case (20): //move back a little
@@ -136,13 +155,13 @@ public class PressButton2 extends AutoRoutine {
                 break;
             case (21): //turn to precise angle
                 spd = 0.2;
-                if (Math.abs(angleFromPicture) < 20) spd = Math.abs(angleFromPicture) / 100;
-                if (angleFromPicture<0) { //which angle to turn
+                if (Math.abs(angleFromBeacon) < 20) spd = Math.abs(angleFromBeacon) / 100;
+                if (angleFromBeacon<0) { //which angle to turn
                     chassis.turnMotors(-spd);
                 } else {
                     chassis.turnMotors(spd);
                 }
-                state.state(Math.abs(angleFromPicture)<2,22);
+                state.state(Math.abs(angleFromBeacon)<2,22);
                 break;
             case (22): //move to line and scan
                 if (colorEqualsBlue) {
