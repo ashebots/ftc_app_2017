@@ -26,15 +26,14 @@ public class PressButtonTest extends AdvOpMode
     public PressButtonTest() {
         msStuckDetectInit = 60000;
     }
-    PressButton auto;
-
+    ColorImaging color;
     @Override
     public void init () {
         Chassis chassis = imuchassis("Left","Right","IMU");
         Scaler foot = new Scaler();
         foot.setTicksPer(615);
 
-        ColorImaging color = new ColorImaging(hardwareMap);
+        color = new ColorImaging(hardwareMap);
         color.init();
         color.setCamera(Cameras.PRIMARY);
         color.setFrameSize(new Size(720, 1280));
@@ -49,20 +48,15 @@ public class PressButtonTest extends AdvOpMode
         color.rotation.setActivityOrientationFixed(ScreenOrientation.PORTRAIT);
         color.cameraControl.setColorTemperature(CameraControlExtension.ColorTemperature.AUTO);
         color.cameraControl.setAutoExposureCompensation();
-
-        ColorSensor lineDetector = hardwareMap.colorSensor.get("Color");
-
-        auto = new PressButton(chassis, foot, 0, false, color, lineDetector);
     }
 
     @Override
     public void loop () {
-        auto.run();
-
+        telemetry.addData("Left",color.beacon.getAnalysis().getStateLeft().toString());
+        telemetry.addData("Right",color.beacon.getAnalysis().getStateRight().toString());
     }
 
     @Override
     public void stop () {
-        auto.stop();
     }
 }

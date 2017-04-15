@@ -21,7 +21,7 @@ public class RedLeftBeaconsNoShootCenter extends AdvOpMode {
 
     @Override
     public void init() {
-        double[][] sequence = {ModularAuto.LEFT_START, ModularAuto.FAR_HUB, ModularAuto.CLOSE_BEACON, ModularAuto.FAR_BEACON, ModularAuto.BEACON_THROW, ModularAuto.CLOSE_PARK};
+        double[][] sequence = {ModularAuto.LEFT_START, ModularAuto.FAR_HUB, ModularAuto.BEACON, ModularAuto.BEACON_THROW, ModularAuto.CLOSE_PARK};
         Scaler s = new Scaler();
         s.setTicksPer(encoderConstant);
         c = imuchassismechanum("Left", "Right", "LeftBack", "RightBack", "IMU");

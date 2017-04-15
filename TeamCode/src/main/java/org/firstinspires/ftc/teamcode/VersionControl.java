@@ -13,7 +13,7 @@ public class VersionControl extends AdvOpMode {
     }
     @Override
     public void loop() {
-        telemetry.addData("Version","1.1.1");
+        telemetry.addData("Version","1.2");
     }
     @Override
     public void stop() {

@@ -1,17 +1,14 @@
 package org.firstinspires.ftc.teamcode.auto;
 
-import android.graphics.Camera;
-import android.graphics.Color;
-import android.hardware.camera2.CameraDevice;
-
 import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.vuforia.Vuforia;
 
-import org.ashebots.ftcandroidlib.complexOps.*;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.ashebots.ftcandroidlib.complexOps.AutoRoutine;
+import org.ashebots.ftcandroidlib.complexOps.Chassis;
+import org.ashebots.ftcandroidlib.complexOps.Scaler;
+import org.ashebots.ftcandroidlib.complexOps.Timer;
 import org.lasarobotics.vision.opmode.ColorImaging;
 
-public class PressButton2 extends AutoRoutine {
+public class PressButton3 extends AutoRoutine {
     Chassis chassis;
     VuforiaImaging vuforia;
     ColorImaging color;
@@ -28,7 +25,7 @@ public class PressButton2 extends AutoRoutine {
 
     CenterAlignment centerAlignment = new CenterAlignment();
 
-    public PressButton2(Chassis c, Scaler s, int t, boolean isBlue, ColorImaging color, ColorSensor lineDetector) {
+    public PressButton3(Chassis c, Scaler s, int t, boolean isBlue, ColorImaging color, ColorSensor lineDetector) {
         chassis = c;
         foot = s;
         target = t;
@@ -100,13 +97,13 @@ public class PressButton2 extends AutoRoutine {
                 if (isBlueOnLeft ^ colorEqualsBlue) {
                     state.state(true, 6); //one's true, one's false, therefore, our color is not on the left
                 } else {
-                    state.state(true, 8); //both are the same, therefore, our color is on the left
+                    state.state(true, 5); //both are the same, therefore, our color is on the left
                 }
                 break;
-            case (5): //left (unused, it will hit anyway)
-                chassis.omniDrive(-0.75,0);
-                state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>80,7);
-                encTicsToCenter = 80;
+            case (5): //left
+                chassis.omniDrive(0.75,0);
+                state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>60,7);
+                encTicsToCenter = -60;
                 break;
             case (6): //right
                 chassis.omniDrive(-0.75,0);
@@ -134,10 +131,18 @@ public class PressButton2 extends AutoRoutine {
                 state.state(chassis.aRange(foot.s(1.25), INF),10);
                 break;
             case (10): //recenter
-                chassis.omniDrive(0.75,0);
+                if (encTicsToCenter < 0) {
+                    chassis.omniDrive(-0.75,0);
+                } else {
+                    chassis.omniDrive(0.75,0);
+                }
                 //state.state(Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>encTicsToCenter,11);
                 if (Math.abs(chassis.motorRight.getCurrentPosition()-chassis.roff)>encTicsToCenter) {
-                    return true;
+                    if (target == 1) {
+                        return true;
+                    }
+                    target++;
+                    state.state(true,22);
                 }
                 break;
             /*case (11): //correct

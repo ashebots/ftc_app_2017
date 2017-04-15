@@ -37,8 +37,7 @@ public class ModularAuto extends AutoRoutine {
     static public double[] RAMP_PARK = {2, 2}; //gets onto the ramp fully
     static public double[] CLOSE_PARK = {6,5};
     static public double[] FAR_PARK = {5,6};
-    static public double[] CLOSE_BEACON = {2,4.5};
-    static public double[] FAR_BEACON = {2,8.5};
+    static public double[] BEACON = {2,4.5};
     static public double[] BEACON_HUB = {2.5,6.5};
     static public double[] CLOSE_HUB = {6,2};
     static public double[] FAR_HUB = {4,2};
@@ -147,13 +146,9 @@ public class ModularAuto extends AutoRoutine {
         if (pos[s+1]==ModularAuto.RAMP_PARK) {
             special = new Ramp(chassis, blue);
         }
-        else if (pos[s+1]==ModularAuto.CLOSE_BEACON) {
-            special = new PressButton2(chassis, foot, 0, blue, color, lineDetector);
-            posYafterSpecial += 0.5;
-        }
-        else if (pos[s+1]==ModularAuto.FAR_BEACON) {
-            special = new PressButton2(chassis, foot, 1, blue, color, lineDetector);
-            posYafterSpecial += 0.5;
+        else if (pos[s+1]==ModularAuto.BEACON) {
+            special = new PressButton3(chassis, foot, 0, blue, color, lineDetector);
+            posYafterSpecial += 4.5;
         }
         else if (pos[s+1]==ModularAuto.CLOSE_THROW) {
             special = new ShootBall(chassis, sweeperTop, sweeper, accelerator, -23*reversal, numBalls);
