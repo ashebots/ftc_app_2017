@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class Joystick {
-    public static double[] calculate(double xPos, double yPos){
+    public static double[] calculateNormal(double xPos, double yPos){
 
         //The angle formed by the y axis and the line formed by (0,0) and where the joystick is located.
         double joystickAngle;
@@ -47,6 +47,19 @@ public class Joystick {
             }
 
         return  motorSpeeds;
+        }
+
+    public static double[] calculateCarving(double xPos, double yPos){
+
+        double[] motorSpeeds = new double[2];
+
+        if (xPos > 1) xPos = 1;
+        if (yPos > 1) yPos = 1;
+
+        motorSpeeds[0] = yPos;
+        motorSpeeds[1] = (xPos + 1) * (3/8);
+
+        return motorSpeeds;
         }
     }
 
