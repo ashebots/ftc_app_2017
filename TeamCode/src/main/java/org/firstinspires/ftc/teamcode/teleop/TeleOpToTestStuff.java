@@ -24,6 +24,6 @@ public class TeleOpToTestStuff extends OpMode {
 
     @Override
     public void loop(){
-        chassis.CarvingDrive(gamepad1.right_stick_x, -gamepad1.left_stick_y);
+        chassis.CarDrive(0.75 * gamepad1.right_stick_x, -gamepad1.left_stick_y);
     }
 }

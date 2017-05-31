@@ -53,8 +53,8 @@ public class Chassis {
         motorLeftRear.setPower(motorSpeeds[1]);
         motorRightRear.setPower(motorSpeeds[0]);
     }
-    public void CarvingDrive(double xPos, double yPos){
-        double[] motorSpeeds = Joystick.calculateCarving(xPos, yPos);
+    public void CarDrive(double xPos, double yPos){
+        double[] motorSpeeds = Joystick.calculateCar(xPos, yPos);
 
         motorLeft.setPower(motorSpeeds[0]);
         turningServo.setPosition(motorSpeeds[1]);

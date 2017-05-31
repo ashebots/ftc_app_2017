@@ -49,7 +49,7 @@ public class Joystick {
         return  motorSpeeds;
         }
 
-    public static double[] calculateCarving(double xPos, double yPos){
+    public static double[] calculateCar(double xPos, double yPos){
 
         double[] motorSpeeds = new double[2];
 
@@ -57,8 +57,7 @@ public class Joystick {
         if (yPos > 1) yPos = 1;
 
         motorSpeeds[0] = yPos;
-        motorSpeeds[1] = (xPos + 1) * (3/8);
-
+        motorSpeeds[1] = (xPos + 1) / 2;
         return motorSpeeds;
         }
     }
