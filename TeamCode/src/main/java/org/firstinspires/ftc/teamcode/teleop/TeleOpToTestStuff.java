@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.IrSeekerSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
@@ -10,20 +11,24 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 @TeleOp(name = "Joystick test", group = "Niko's Code")
 public class TeleOpToTestStuff extends OpMode {
-    DcMotor drivingMotor;
-    Servo turningServo;
+    DcMotor leftMotor;
+    DcMotor rightMotor;
     Chassis chassis;
-
+    IrSeekerSensor sensor;
     @Override
     public void init(){
-        drivingMotor = hardwareMap.dcMotor.get("Driving motor");
-        turningServo = hardwareMap.servo.get("Turning servo");
-        chassis = new Chassis(drivingMotor, turningServo);
+        sensor = hardwareMap.irSeekerSensor.get("IrSensor");
+        leftMotor = hardwareMap.dcMotor.get("Left");
+        rightMotor = hardwareMap.dcMotor.get("Right");
+        chassis = new Chassis(leftMotor, rightMotor);
 
     }
 
     @Override
     public void loop(){
-        chassis.CarDrive(0.75 * gamepad1.right_stick_x, -gamepad1.left_stick_y);
+        chassis.NormalDrive(-gamepad1.left_stick_x, gamepad1.left_stick_y);
+        telemetry.addData("Ir sensor angle", sensor.getAngle());
+        telemetry.addData("Ir sensor strength", sensor.getStrength());
+
     }
 }
